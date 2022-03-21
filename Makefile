@@ -6,7 +6,7 @@
 #    By: nflan <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 10:49:49 by nflan             #+#    #+#              #
-#    Updated: 2022/03/18 17:32:10 by nflan            ###   ########.fr        #
+#    Updated: 2022/03/21 18:39:06 by nflan            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,7 @@ DEBUG = -g3 -fsanitize=address
 
 all: ${NAME}
 
-$(NAME): ${OBJS} ${HEADER} ${LIBFT}
+$(NAME): ${OBJS} ${INC} ${HEADER} ${LIBFT}
 	$(MAKE) -C minilibx/
 	${CC} ${CFLAGS} ${OBJS} -I ${INC} ${MINILIBX} ${LIBFT} -lXext -lX11 -lm -o ${NAME}
 
