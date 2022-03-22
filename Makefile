@@ -6,7 +6,7 @@
 #    By: nflan <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 10:49:49 by nflan             #+#    #+#              #
-#    Updated: 2022/03/22 15:41:16 by nflan            ###   ########.fr        #
+#    Updated: 2022/03/22 18:00:08 by nflan            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,9 +47,9 @@ all: ${NAME}
 
 $(NAME): ${OBJS} ${INC} ${HEADER} ${LIBFT}
 	$(MAKE) -C minilibx/
-	${CC} ${CFLAGS} ${OBJS} -I ${INC} ${MINILIBX} ${LIBFT} -lXext -lX11 -lm -o ${NAME}
+	${CC} ${CFLAGS} ${OBJS} -I ${INC} ${MINILIBX} ${LIBFT} -lXext -lX11 -lm ${DEBUG} -o ${NAME}
 
-bonus: ${OBJSB} ${HEADER} ${LIBFT}
+bonus: ${OBJSB} ${INC} ${HEADER} ${LIBFT}
 	${RM} ${OBJS}
 	$(MAKE) -C minilibx/
 	${CC} ${CFLAGS} ${OBJSB} -I ${INCB} -o ${NAME}
