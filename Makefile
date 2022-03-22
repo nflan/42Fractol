@@ -6,7 +6,7 @@
 #    By: nflan <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 10:49:49 by nflan             #+#    #+#              #
-#    Updated: 2022/03/21 18:39:06 by nflan            ###   ########.fr        #
+#    Updated: 2022/03/22 15:41:16 by nflan            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ vpath %.h libft
 vpath ft_%.c libft
 vpath ft_%.o libft
 
-sources = srcs/main.c 
+sources = srcs/main.c srcs/ft_colors.c
 
 INC = include/fractol.h
 

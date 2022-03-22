@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 10:52:06 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/21 18:51:25 by nflan            ###   ########.fr       */
+/*   Updated: 2022/03/22 16:01:39 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct s_all
 	int		width;
 	int		height;
 	int		ac;
+	int		color;
 	t_data	img;
 }	t_all;
 
@@ -43,10 +44,31 @@ typedef struct s_color
 	float	b;
 }	t_color;
 
+typedef struct s_area
+{
+	double	x1;
+	double	x2;
+	double	y1;
+	double	y2;
+	double	image_x;
+	double	image_y;
+	double	zoom_x;
+	double	zoom_y;
+	int		w;
+	int		h;
+}	t_area;
+
 typedef struct s_complex
 {
 	double	re;
 	double	im;
 }	t_complex;
+
+// MAIN
+int	create_trgb(int t, int r, int g, int b);
+
+// COLORS
+int ft_deg(int iteration, int max, int t, int i);
+int	ft_man_color(void);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 10:51:37 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/21 18:53:20 by nflan            ###   ########.fr       */
+/*   Updated: 2022/03/22 16:04:48 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ t_all	*ft_init_all(int ac, char **av)
 		return (NULL);
 	g->av = av;
 	g->ac = ac;
+	g->color = atoi(av[4]);
 	return (g);
 }
 
@@ -80,16 +81,18 @@ int	ft_parse(int ac, char **av)
 	int	i;
 
 	i = 0;
-	if (!av[2] || (av[2] && ft_atoi(av[2]) < 960))
-		i += ft_putstr_fd("Le 2eme arg doit etre un int superieur a 980\n", 1);
-	if (!av[3] || (av[3] && ft_atoi(av[3]) < 540))
-		i += ft_putstr_fd("Le 3eme arg doit etre un int superieur a 540\n", 1);
+	if (!ft_strncmp(av[1], "color", 6))
+		ft_man_color();
+	if (!av[2] || ft_atoi(av[2]) < 100 || ft_atoi(av[2]) > 2560)
+		i += ft_putstr_fd("Le 2eme arg doit etre un int inferieur a 2560\n", 2);
+	if (!av[3] || ft_atoi(av[3]) < 100 || ft_atoi(av[3])> 1355)
+		i += ft_putstr_fd("Le 3eme arg doit etre un int inferieur a 1355\n", 2);
 	av[1] = ft_strlower(av[1]);
 	if (ft_strncmp(av[1], "julia", 6) && ft_strncmp(av[1], "mandelbrot", 11))
-		i += ft_putstr_fd("L'argument 1 est Julia ou Mandelbrot\n", 1);
-	if (ac != 4 || i)
+		i += ft_putstr_fd("L'argument 1 est Julia ou Mandelbrot\n", 2);
+	if (ac < 4 || ac > 5 || i)
 	{
-		i += ft_putstr_fd("La fonction s'execute comme suit :\nav[1] = nom de la fractale\nav[2] = width (int > 0)\nav[3] = height (int > 0)\n", 1);
+		i += ft_putstr_fd("La fonction s'execute comme suit :\nav[1] = nom de la fractale\nav[2] = width (100 <= int <= 2560)\nav[3] = height (100 <= int <= 1355)\nav[4] = color (0 <= int <= 255) (vous pouvez executer la commande \"./fractor color\" pour plus d'informations).\n", 2);
 		exit (0);
 	}
 	return (0);
@@ -106,12 +109,12 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
-/*	while (x > 0 && y > 0)
-	{
+	/*	while (x > 0 && y > 0)
+		{
 		x--;
 		y--;
-	}
-*/}
+		}
+		*/}
 
 void	ft_julia(t_all *g, t_data img)
 {
@@ -124,97 +127,98 @@ void	ft_julia(t_all *g, t_data img)
 	mlx_put_image_to_window(g->setup, g->window, img.img, 0, 0);
 }
 
-/*void	ft_mandelbrot(t_all *g, t_data img)
+/*t_area	*ft_init_area_mandelbrot(t_all *g)
 {
-	t_color		rgb;
-	int			A, B, i;
-	double		a, b, x, y, t, n;
-	
-	n = g->width / 2;
-	rgb.r = 255;
-	rgb.g = 255;
-	rgb.b = 255;
-	A = g->width / 2;
-	B = g->height / 2;
-	while (B++ <= 4 * n + (g->height / 2))
-	{
-		b = 2 - (B / n);
-		while (A++ <= 4 * n + (g->width / 2))
-		{
-			a = -2 + (A / n);
-			printf("a = %f\n", a);
-			x = 0;
-			y = 0;
-			i = 1;
-			while (i++ <= g->width / 2)
-			{
-				t = x;
-				x = (x * x) - (y * y) + a;
-				y = (2 * t * y) + b;
-				if ((x * x) + (y * y) > 4)
-				{
-					printf("i = %d\n", i);
-					break;
-				}
-			}
-			if (i > g->width / 2)
-			{
-				printf("ok\n");
-				my_mlx_pixel_put(&img, A, B, create_trgb(100, rgb.r, rgb.g, rgb.b));
-			}
-		}
-	}
-	mlx_put_image_to_window(g->setup, g->window, img.img, 0, 0);
+	t_area	*area;
+	unsigned int	zoom;
+
+	area = NULL;
+	area = ft_calloc(sizeof(t_area), 1);
+	if (!area)
+		return (NULL);
+	area->x1 = -2.1;
+	area->x2 = 0.6;
+	area->y1 = -1.2;
+	area->y2 = 1.2;
+//	if (g->width > 1000)
+//		area->image_x = 920;
+//	if (g->width > 800)
+//		area->image_y = 700;
+	area->image_x = g->width;
+	area->image_y = g->height;
+	area->zoom_x = area->image_x / (area->x2 - area->x1);
+	area->zoom_y = area->image_y / (area->y2 - area->y1);
+	return (area);
 }*/
 
-void	ft_mandelbrot(t_all *g, t_data img)
+t_area	ft_init_area_mandelbrot(t_all *g)
 {
-	int	row = 0;
-	int	col;
-	t_complex	c;
-	double	x;
-	double	y;
-	int		iteration;
-	double	x_new;
-	int		max = 1920;
+	t_area	area;
 
-	while (row++ < g->height)
+	area.w = g->width;
+	area.h = g->height;
+	while ((double)area.w / (double)area.h != 1.125)
+	{
+		if ((double)area.w / (double)area.h > 1.125)
+			area.w--;
+		if ((double)area.w / (double)area.h < 1.125)
+			area.h--;
+	}
+//	printf("w = %d && h = %d\n", area.w, area.h);
+	area.x1 = -2.1;
+	area.x2 = 0.6;
+	area.y1 = -1.2;
+	area.y2 = 1.2;
+	area.image_x = area.w;;
+	area.image_y = area.h;
+	area.zoom_x = area.image_x / (area.x2 - area.x1);
+	area.zoom_y = area.image_y / (area.y2 - area.y1);
+	return (area);
+}
+
+int	ft_mandelbrot(t_all *g, t_data img) // zoom
+{
+	t_complex	c;
+	double		x;
+	double		y;
+	double		x_new;
+	int			row;
+	int			col;
+	int			iteration;
+	int			max = 50;
+	t_area		area;
+
+	area = ft_init_area_mandelbrot(g);
+	row = 0;
+//	printf("row = %d\n", row);
+//	printf("area.image_x = %f\n", area.image_x);
+//	printf("area.image_y = %f\n", area.image_y);
+	while (row++ < area.image_x)
 	{
 		col = 0;
-		while (col++ < g->width)
+		while (col++ < area.image_y)
 		{
-			c.re = (col - g->width / 2.0) * 4.0 / g->width;
-			c.im = (row - g->height / 2.0) * 4.0 / g->width;
+			c.re = row / area.zoom_x + area.x1;
+			c.im = col / area.zoom_y + area.y1;
 			x = 0;
 			y = 0;
 			iteration = 0;
-			while (x * x + y * y <= 4 && iteration < max)
+			while (x * x + y * y < 4 && iteration < max)
 			{
 				x_new = x * x - y * y + c.re;
-				y = 2 * x * y + c.im;
+				y = 2 * y * x + c.im;
 				x = x_new;
 				iteration++;
 			}
-			printf("iteration = %d\n", iteration);
-			if (iteration < max && col < g->width && iteration > 6)
-				my_mlx_pixel_put(&img, col, row, create_trgb(100, iteration, iteration / 3, iteration / 2));
-			else if (iteration < 3)
-			{
-				my_mlx_pixel_put(&img, col, row, create_trgb(iteration * 10, 0, 0, 255));
-			}
-			else if (iteration > 2 && iteration < 5)
-			{
-				my_mlx_pixel_put(&img, col, row, create_trgb(iteration * 10, 255, 255, 255));
-			}
-			else if (iteration > 4 && iteration < 7)
-			{
-				my_mlx_pixel_put(&img, col, row, create_trgb(iteration * 10, 255, 0, 0));
-			}
+			if (iteration == max)
+				my_mlx_pixel_put(&img, row + ((g->width - area.w) / 2), col + ((g->height - area.h) / 2), ft_deg(iteration, max, 100, 0));
 			else
-				my_mlx_pixel_put(&img, col, row, create_trgb(100, 0, 0, 0));
+				my_mlx_pixel_put(&img, row + ((g->width - area.w) / 2), col + ((g->height - area.h) / 2), ft_deg(iteration, max, 100, g->color));
 		}
 	}
 	mlx_put_image_to_window(g->setup, g->window, img.img, 0, 0);
+	printf("C'est print\n");
+	return (0);
 }
 
 int	main(int ac, char **av)
@@ -229,10 +233,10 @@ int	main(int ac, char **av)
 	img.img = mlx_new_image(g->setup, g->width, g->height);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
 	g->img = img;
-//	if (!ft_strncmp(av[1], "julia", 6))
-//		ft_julia(g, img);
-//	else
-//		ft_mandelbrot(g, img);
+	if (!ft_strncmp(av[1], "julia", 6))
+		ft_julia(g, img);
+	else
+		ft_mandelbrot(g, img);
 	mlx_hook(g->window, 2, 1L << 0, ft_input, g);
 	mlx_hook(g->window, 17, 0, ft_destroy_win, g);
 	mlx_loop(g->setup);
