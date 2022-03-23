@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 10:52:06 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/22 17:53:18 by nflan            ###   ########.fr       */
+/*   Updated: 2022/03/23 19:40:49 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,19 @@ typedef struct s_data
 
 typedef struct s_all
 {
-	char		**av;
-	void		*setup;
-	void		*window;
-	long long	zoom;
-	int			pal[9];
-	int			width;
-	int			height;
-	int			ac;
-	int			color;
-	t_data		img;
+	char	**av;
+	void	*setup;
+	void	*window;
+	double	zoom;
+	int		pal[10];
+	int		width;
+	int		height;
+	int		ac;
+	int		color;
+	int		max;
+	int		fractal;
+	t_data	img;
+	t_data	curr;
 }	t_all;
 
 typedef struct s_color
@@ -64,15 +67,18 @@ typedef struct s_complex
 {
 	double	re;
 	double	im;
+	double	tmpre;
 }	t_complex;
 
 // MAIN
 int	create_trgb(int t, int r, int g, int b);
 int	ft_mandelbrot(t_all *g, t_data img);
+int	ft_julia(t_all *g, t_data img);
 
 // COLORS
-int 	ft_deg(int iteration, int max, int t, int i);
+int 	ft_deg(int iteration, t_all *g, int t, int i);
 void	ft_init_color(t_all *g);
+int		ft_print_new(t_all *g);
 int		ft_change_color(int key, t_all *g);
 int		ft_man_color(void);
 
