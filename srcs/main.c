@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 10:51:37 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/24 13:20:55 by nflan            ###   ########.fr       */
+/*   Updated: 2022/03/24 17:55:41 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,45 @@ void	ft_free_all(t_all *g)
 	if (g)
 		free(g);
 	g = NULL;
+}
+
+void	ft_init_julia(t_all *g, int e)
+{
+	g->julia = 1;
+	g->zoom = 1;
+	if (e == 1 || e == 49)
+	{
+		g->c.re = -0.7;
+		g->c.im = 0.27015;
+		g->max = 300;
+	}
+	else if (e == 2 || e == 50)
+	{
+		g->c.re = -1.25;
+		g->c.im = 0;
+		g->zoom = 0.8;
+		g->max = 50;
+		g->julia = 2;
+	}
+	else if (e == 3 || e == 51)
+	{
+		g->c.re = -0.56;
+		g->c.im = 0.645;
+		g->julia = 3;
+		g->max = 100;
+	}
+	g->fractal = 2;
+}
+
+void	ft_init_mandelbrot(t_all *g)
+{
+	if (!g->av[5])
+		g->julia = 1;
+	else if (g->av[5][0] == '1' || g->av[5][0] == '2')
+		g->julia = ft_atoi(g->av[5]);
+	g->zoom = 0;
+	g->max = 50;
+	g->fractal = 1;
 }
 
 t_all	*ft_init_all(int ac, char **av)
@@ -45,17 +84,9 @@ t_all	*ft_init_all(int ac, char **av)
 	g->ac = ac;
 	ft_init_color(g);
 	if (!ft_strncmp(g->av[1], "julia", 6))
-	{
-		g->zoom = 1;
-		g->max = 300;
-		g->fractal = 2;
-	}
+		ft_init_julia(g, ft_atoi(av[5]));
 	else
-	{
-		g->zoom = 0;
-		g->max = 50;
-		g->fractal = 1;
-	}
+		ft_init_mandelbrot(g);
 	return (g);
 }
 
@@ -88,9 +119,11 @@ int	ft_parse(int ac, char **av)
 	av[1] = ft_strlower(av[1]);
 	if (ft_strncmp(av[1], "julia", 6) && ft_strncmp(av[1], "mandelbrot", 11))
 		i += ft_putstr_fd("L'argument 1 est Julia ou Mandelbrot\n", 2);
-	if (ac < 4 || ac > 5 || i)
+	if (av[5] && (ft_atoi(av[5]) < 1 || ft_atoi(av[5]) > 3))
+		i += ft_putstr_fd("Les ensembles de Julia traites vont de 1 a 3\n", 2);
+	if (ac < 4 || ac > 6 || i)
 	{
-		i += ft_putstr_fd("La fonction s'execute comme suit :\nav[1] = nom de la fractale\nav[2] = width (100 <= int <= 2560)\nav[3] = height (100 <= int <= 1355)\nav[4] = color (0 <= int <= 255) (vous pouvez executer la commande \"./fractor color\" pour plus d'informations).\n", 2);
+		i += ft_putstr_fd("La fonction s'execute comme suit :\nav[1] = nom de la fractale\nav[2] = width (100 <= int <= 2560)\nav[3] = height (100 <= int <= 1355)\nav[4] = color (0 <= int <= 255) (vous pouvez executer la commande \"./fractor color\" pour plus d'informations).\nav[5] = ensemble de Julia (1 par defaut)\n", 2);
 		exit (0);
 	}
 	return (0);
@@ -176,10 +209,6 @@ t_area	ft_init_area_julia(t_all *g)
 			area.h--;
 	}
 	//	printf("w = %d && h = %d\n", area.w, area.h);
-	g->t = 100;
-	g->r = 255;
-	g->g = 255;
-	g->b = 255;
 	area.image_x = area.w;
 	area.image_y = area.h;
 	area.zoom_x = 0.5 * g->zoom * area.image_x;
@@ -189,7 +218,6 @@ t_area	ft_init_area_julia(t_all *g)
 
 int	ft_julia(t_all *g, t_data img)
 {
-	t_complex	c;
 	t_complex	z;
 	int			iteration;
 	t_area		area;
@@ -200,8 +228,6 @@ int	ft_julia(t_all *g, t_data img)
 	//	printf("row = %d\n", row);
 	//	printf("area.image_x = %f\n", area.image_x);
 	//	printf("area.image_y = %f\n", area.image_y);
-	c.re = -0.7;
-	c.im = 0.27015;
 	while (g->y++ < area.image_y)
 	{
 		g->x = 0;
@@ -213,11 +239,14 @@ int	ft_julia(t_all *g, t_data img)
 			while (z.re * z.re + z.im * z.im <= 4 && iteration < g->max)
 			{
 				z.tmpre = z.re;
-				z.re = z.tmpre * z.tmpre - z.im * z.im + c.re;
-				z.im = z.im * z.tmpre + z.im * z.tmpre + c.im;
+				z.re = z.tmpre * z.tmpre - z.im * z.im + g->c.re;
+				z.im = z.im * z.tmpre + z.im * z.tmpre + g->c.im;
 				iteration++;
 			}
-			my_mlx_pixel_put(&img, g, area, ft_deg(iteration, g, 100, g->color));
+			if (iteration == g->max)
+				my_mlx_pixel_put(&img, g, area, create_trgb(100, 0, 0, 0));
+			else
+				my_mlx_pixel_put(&img, g, area, ft_deg(iteration, g, 100, g->color));
 		}
 	}
 	//	printf("C'est print\n");
@@ -226,7 +255,6 @@ int	ft_julia(t_all *g, t_data img)
 
 int	ft_mandelbrot(t_all *g, t_data img) // zoom
 {
-	t_complex	c;
 	t_complex	z;
 	int			iteration;
 	t_area		area;
@@ -242,20 +270,22 @@ int	ft_mandelbrot(t_all *g, t_data img) // zoom
 		g->y = 0;
 		while (g->y++ < area.image_y)
 		{
-			c.re = g->x / area.zoom_x + area.x1;
-			c.im = g->y / area.zoom_y + area.y1;
+			g->c.re = g->x / area.zoom_x + area.x1;
+			g->c.im = g->y / area.zoom_y + area.y1;
+		//	printf("g->c.re = %f && g->c.im = %f\n", g->c.re, g->c.im);
 			z.im = 0;
 			z.re = 0;
 			iteration = 0;
 			while (z.re * z.re + z.im * z.im < 4 && iteration < g->max)
 			{
-				z.tmpre = z.re * z.re - z.im * z.im + c.re;
-				z.im = z.im * z.re + z.im * z.re + c.im;
+				z.tmpre = z.re * z.re - z.im * z.im + g->c.re;
+				z.im = z.im * z.re + z.im * z.re + g->c.im;
 				z.re = z.tmpre;
+		//		printf("z.re = %f && z.im = %f\n", z.re, z.im);
 				iteration++;
 			}
 			if (iteration == g->max)
-				my_mlx_pixel_put(&img, g, area, create_trgb(100, 255, 255, 255));
+				my_mlx_pixel_put(&img, g, area, create_trgb(100, 0, 0, 0));
 			else
 				my_mlx_pixel_put(&img, g, area, ft_deg(iteration, g, 100, g->color));
 		}
@@ -278,27 +308,13 @@ int	ft_limits(int key, t_all *g)
 int	ft_change(int key, t_all *g)
 {
 	if (key == 106 && g->fractal != 2)
-		g->fractal = 2;
+		ft_init_julia(g, g->julia);
 	else if (key == 109 && g->fractal != 1)
-		g->fractal = 1;
-	else
-			return (0);
-	if (g->fractal == 2)
-	{
-		g->zoom = 1;
-		g->max = 300;
-	}
-	else
-	{
-		g->zoom = 0;
-		g->max = 50;
-	}
-	ft_print_new(g);
+		ft_init_mandelbrot(g);
 	return (0);
 }
 int	ft_zoom(int key, t_all *g)
 {
-	//	printf("g->zoom = %f\n", g->zoom);
 	if (key != 114)
 		if (ft_limits(key, g))
 			return (1);
@@ -310,14 +326,26 @@ int	ft_zoom(int key, t_all *g)
 	{
 		if (g->fractal == 1)
 			g->zoom = 0;
-		else if (g->fractal == 2)
+		else if (g->fractal == 2 && g->julia == 1)
+			g->zoom = 0.8;
+		else
 			g->zoom = 1;
 	}
 	else if (key == 65362 && g->fractal == 2)
-		g->zoom += 10;
+	{
+		if (g->zoom == 0.3 && g->julia == 2)
+			g->zoom = 1;
+		else if (g->zoom == 0.3 && g->julia != 2)
+			g->zoom = 0.8;
+		else
+			g->zoom += 10;
+	}
 	else if (key == 65364 && g->fractal == 2)
+	{
 		g->zoom -= 10;
-	ft_print_new(g);
+		if (g->zoom < 0.3)
+			g->zoom = 0.3;
+	}
 	return (0);
 }
 
@@ -327,7 +355,8 @@ int	ft_mouse(int keycode, int x, int y, t_all *g)
 	(void)y;
 //	printf("x = %d && y = %d\n", x, y);
 	if (keycode == 4 || keycode == 5)
-		return (ft_zoom(keycode, g));
+		ft_zoom(keycode, g);
+	ft_print_new(g);
 	return (0);
 }
 
@@ -343,23 +372,28 @@ int	ft_destroy_win(t_all *g)
 
 int	ft_net(int key, t_all *g)
 {
-	if (key == 65453)
-		g->max -= 5;
+	if (key == 65450)
+		g->max += 50;
 	else if (key == 65451)
 		g->max += 5;
+	else if (key == 65453)
+		g->max -= 5;
+	else if (key == 65455)
+		g->max -= 50;
 	else if (key == 65469)
 	{
 		if (g->fractal == 1)
 			g->max = 50;
-		else
+		else if (g->fractal == 2 && g->julia == 1)
 			g->max = 300;
+		else
+			g->max = 100;
 	}
 	if (g->max <= 0)
 	{
 		g->max = 5;
 		return (0);
 	}
-	ft_print_new(g);
 	return (0);
 }
 
@@ -371,17 +405,20 @@ int	ft_input(int keycode, t_all *g)
 //	printf("keycode = %d\n", keycode);
 	if (keycode == 65361 || keycode == 65363)
 		ft_change_color(keycode, g);
-	if (keycode == 98)
+	else if (keycode == 98)
 		while (i-- > 0)
 			ft_change_color(65363, g);
-	if (keycode == 106 || keycode == 109)
+	else if (keycode == 106 || keycode == 109)
 		ft_change(keycode, g);
-	if (keycode == 113 || keycode == 65307)
+	else if (keycode == 113 || keycode == 65307)
 		ft_destroy_win(g);
-	if (keycode == 114 || keycode == 65362 || keycode == 65364)
+	else if (keycode == 114 || keycode == 65362 || keycode == 65364)
 		ft_zoom(keycode, g);
-	if (keycode == 65453 || keycode == 65451 || keycode == 65469)
+	else if ((keycode >= 65450 && keycode <= 65455) || keycode == 65469)
 		ft_net(keycode, g);
+	else if (keycode >= 49 && keycode <= 51 && g->fractal == 2)
+		ft_init_julia(g, keycode);
+	ft_print_new(g);
 	return (0);
 }
 
@@ -395,6 +432,7 @@ int	main(int ac, char **av)
 		return (1);
 	g->img.img = mlx_new_image(g->setup, g->width, g->height);
 	g->img.addr = mlx_get_data_addr(g->img.img, &g->img.bits_per_pixel, &g->img.line_length, &g->img.endian);
+//	printf("g->fractal = %d\n", g->fractal);
 	if (g->fractal == 2)
 		ft_julia(g, g->img);
 	else

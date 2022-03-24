@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 15:31:25 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/24 12:12:45 by nflan            ###   ########.fr       */
+/*   Updated: 2022/03/24 17:55:19 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@ int	ft_man_color(void)
 	ft_printf("Jaune\t= 12\n");
 	ft_printf("Rose\t= 13\n");
 	ft_printf("Turquoise\t= 23\n");
-	ft_printf("Ideux\t= 50\n");
+	ft_printf("Rainbow\t= 50\n");
+	ft_printf("Rainbow psyche\t= 51\n");
 	ft_printf("Un peu de tout\t= 123\n");
+	ft_printf("Rouge psyche\t= 151\n");
 	ft_printf("Blanc\t= 255\n");
 	exit (0);
 }
@@ -41,12 +43,14 @@ void	ft_init_color(t_all *g)
 	g->pal[5] = 13;
 	g->pal[6] = 23;
 	g->pal[7] = 50;
-	g->pal[8] = 123;
-	g->pal[9] = 255;
+	g->pal[8] = 51;
+	g->pal[9] = 123;
+	g->pal[10] = 151;
+	g->pal[11] = 255;
 	if (g->av[4])
 	{
 		g->color = atoi(g->av[4]);
-		while (i >= 0 && i <= 9)
+		while (i >= 0 && i <= 10)
 			if (g->pal[i++] == g->color)
 				i = -1;
 		if (i != -1)
@@ -74,18 +78,18 @@ int	ft_change_color(int key, t_all *g)
 	int	i;
 
 	i = 0;
-	while (g->pal[i] != g->color && i >= 0 && i <= 9)
+	while (g->pal[i] != g->color && i <= 11)
 		i++;
 	if (key == 65361)
 	{
 		if (i == 0)
-			g->color = g->pal[9];
+			g->color = g->pal[11];
 		else
 			g->color = g->pal[i - 1];
 	}
 	else if (key == 65363)
 	{
-		if (i == 9)
+		if (i == 11)
 			g->color = g->pal[0];
 		else
 			g->color = g->pal[i + 1];
@@ -94,29 +98,118 @@ int	ft_change_color(int key, t_all *g)
 	return (0);
 }
 
+int	ft_rgb_psy(t_all *g, int iteration)
+{
+	int	r;
+	int	gg;
+	int	b;
+	int	i;
+
+	i = g->max / 7;
+	if (iteration < i * 2)
+		return (create_trgb(100, iteration, iteration, iteration));
+	if (iteration < i * 3)
+	{
+		r = 0;
+		gg = 0;
+		b = iteration * i;
+	}
+	else if (iteration < i * 4)
+	{
+		r = 0;
+		gg = iteration * i;
+		b = 0;
+	}
+	else if (iteration < i * 5)
+	{
+		r = iteration * i;
+		gg = iteration * i;
+		b = 0;
+	}
+	else if (iteration < i * 6)
+	{
+		r = iteration * i;
+		gg = iteration * i / 2;
+		b = 0;
+	}
+	else if (iteration < i * 7)
+	{
+		r =  iteration * i;
+		gg = 0;
+		b = 0;
+	}
+	else
+	{
+		r = 0;
+		gg = 0;
+		b = 0;
+	}
+	return (create_trgb(100, r, gg, b));
+}
+
+int	ft_red_psy(t_all *g, int iteration)
+{
+	int	r;
+	int	gg;
+	int	b;
+	int	i;
+
+	i = g->max / 7;
+	if (iteration < i * 2)
+		return (create_trgb(100, iteration, iteration, iteration));
+	if (iteration < i * 3)
+	{
+		r = 0;
+		gg = 0;
+		b = 255 - iteration * i;
+	}
+	else if (iteration < i * 4)
+	{
+		r = 0;
+		gg = 255 - iteration * i;
+		b = 0;
+	}
+	else if (iteration < i * 5)
+	{
+		r = 255 - iteration * i;
+		gg = 255 - iteration * i;
+		b = 0;
+	}
+	else if (iteration < i * 6)
+	{
+		r = 255 - iteration * i;
+		gg = 255 - iteration * i / 2;
+		b = 0;
+	}
+	else if (iteration < i * 7)
+	{
+		r = 255 - iteration * i;
+		gg = 0;
+		b = 0;
+	}
+	else
+	{
+		r = 0;
+		gg = 0;
+		b = 0;
+	}
+	return (create_trgb(100, r, gg, b));
+}
+
 int	ft_rgb(t_all *g, int iteration)
 {
 	int	r;
 	int	gg;
 	int	b;
+	int	i;
 
 	r = 255;
 	gg = 255;
 	b = 255;
-	int i = g->max / 7;
-	if (iteration == 0)
-	{
-		r = 148;
-		gg = 0;
-		b = 211;
-	}
-	else if (iteration < i * 2)
-	{
-		r = 75;
-		gg = 0;
-		b = 130;
-	}
-	else if (iteration < i * 3)
+	i = g->max / 7;
+	if (iteration < i * 2)
+		return (create_trgb(100, iteration, iteration, iteration));
+	if (iteration < i * 3)
 	{
 		r = 0;
 		gg = 0;
@@ -143,6 +236,12 @@ int	ft_rgb(t_all *g, int iteration)
 	else if (iteration < i * 7)
 	{
 		r = 255;
+		gg = 0;
+		b = 0;
+	}
+	else
+	{
+		r = 0;
 		gg = 0;
 		b = 0;
 	}
@@ -189,5 +288,9 @@ int	ft_deg(int iteration, t_all *g, int t, int i)
 		return (create_trgb(t, 0, color, color));
 	if (i == 50)
 		return (ft_rgb(g, iteration));
+	if (i == 51)
+		return (ft_rgb_psy(g, iteration));
+	if (i == 151)
+		return (ft_red_psy(g, iteration));
 	return (create_trgb(t, color, color, color));
 }
