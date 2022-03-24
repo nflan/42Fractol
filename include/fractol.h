@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 10:52:06 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/23 19:40:49 by nflan            ###   ########.fr       */
+/*   Updated: 2022/03/24 11:59:25 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,12 @@ typedef struct s_all
 	int		height;
 	int		ac;
 	int		color;
+	int		t;
+	int		r;
+	int		g;
+	int		b;
+	int		x;
+	int		y;
 	int		max;
 	int		fractal;
 	t_data	img;
@@ -72,6 +78,7 @@ typedef struct s_complex
 
 // MAIN
 int	create_trgb(int t, int r, int g, int b);
+int	get_color(int trgb, int c);
 int	ft_mandelbrot(t_all *g, t_data img);
 int	ft_julia(t_all *g, t_data img);
 

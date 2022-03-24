@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 10:51:37 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/23 19:43:21 by nflan            ###   ########.fr       */
+/*   Updated: 2022/03/24 13:20:55 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,13 +101,41 @@ int	create_trgb(int t, int r, int g, int b)
 	return (t << 24 | r << 16 | g << 8 | b);
 }
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+/*int	get_color(int trgb, int c)
+  {
+  if (c == 't')
+  return ((trgb >> 24) & 0xFF);
+  else if (c == 'r')
+  return ((trgb >> 16) & 0xFF);
+  else if (c == 'g')
+  return ((trgb >> 8) & 0xFF);
+  else if (c == 'b')
+  return (trgb & 0xFF);
+  return (0);
+  }*/
+
+void	my_mlx_pixel_put(t_data *data, t_all *g, t_area area, int color)
+{
+	char	*dst;
+	int		x;
+	int		y;
+
+	x = g->x + ((g->width - area.w) / 2);
+	y = g->y + ((g->height - area.h) / 2);
+	if (g->x <= area.w && g->y <= area.h && x > 0 && y > 0)
+	{
+		dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+		*(unsigned int*)dst = color;
+	}
+}
+
+/*void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
 	char	*dst;
 
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
-}
+}*/
 
 t_area	ft_init_area_mandelbrot(t_all *g)
 {
@@ -122,7 +150,7 @@ t_area	ft_init_area_mandelbrot(t_all *g)
 		if ((double)area.w / (double)area.h < 1.125)
 			area.h--;
 	}
-//	printf("w = %d && h = %d\n", area.w, area.h);
+	//	printf("w = %d && h = %d\n", area.w, area.h);
 	area.x1 = -2.1 + g->zoom;
 	area.x2 = 0.6 - g->zoom;
 	area.y1 = -1.2 + g->zoom;
@@ -147,15 +175,15 @@ t_area	ft_init_area_julia(t_all *g)
 		if ((double)area.w / (double)area.h < 1.33)
 			area.h--;
 	}
-//	printf("w = %d && h = %d\n", area.w, area.h);
-	area.x1 = -2.1 + g->zoom;
-	area.x2 = 0.6 - g->zoom;
-	area.y1 = -1.2 + g->zoom;
-	area.y2 = 1.2 - g->zoom;
+	//	printf("w = %d && h = %d\n", area.w, area.h);
+	g->t = 100;
+	g->r = 255;
+	g->g = 255;
+	g->b = 255;
 	area.image_x = area.w;
 	area.image_y = area.h;
-	area.zoom_x = area.image_x / (area.x2 - area.x1);// + g->zoom;
-	area.zoom_y = area.image_y / (area.y2 - area.y1);// + g->zoom;
+	area.zoom_x = 0.5 * g->zoom * area.image_x;
+	area.zoom_y = 0.5 * g->zoom * area.image_y;
 	return (area);
 }
 
@@ -163,26 +191,24 @@ int	ft_julia(t_all *g, t_data img)
 {
 	t_complex	c;
 	t_complex	z;
-	int			x;
-	int			y;
 	int			iteration;
 	t_area		area;
 
 	area = ft_init_area_julia(g);
-	y = 0;
+	g->y = 0;
 	g->fractal = 2;
-//	printf("row = %d\n", row);
-//	printf("area.image_x = %f\n", area.image_x);
-//	printf("area.image_y = %f\n", area.image_y);
+	//	printf("row = %d\n", row);
+	//	printf("area.image_x = %f\n", area.image_x);
+	//	printf("area.image_y = %f\n", area.image_y);
 	c.re = -0.7;
 	c.im = 0.27015;
-	while (y++ < area.image_y)
+	while (g->y++ < area.image_y)
 	{
-		x = 0;
-		while (x++ < area.image_x)
+		g->x = 0;
+		while (g->x++ < area.image_x)
 		{
-			z.re = 1.5 * (x - area.image_x / 2) / (0.5 * g->zoom * area.image_x);
-			z.im = (y - area.image_y / 2) / (0.5 * g->zoom * area.image_y);
+			z.re = 1.5 * (g->x - area.image_x / 2) / area.zoom_x;
+			z.im = (g->y - area.image_y / 2) / area.zoom_y;
 			iteration = 0;
 			while (z.re * z.re + z.im * z.im <= 4 && iteration < g->max)
 			{
@@ -191,13 +217,10 @@ int	ft_julia(t_all *g, t_data img)
 				z.im = z.im * z.tmpre + z.im * z.tmpre + c.im;
 				iteration++;
 			}
-			if (iteration == g->max)
-				my_mlx_pixel_put(&img, x + ((g->width - area.w) / 2), y + ((g->height - area.h) / 2), create_trgb(100, 0, 0, 0));
-			else
-				my_mlx_pixel_put(&img, x + ((g->width - area.w) / 2), y + ((g->height - area.h) / 2), ft_deg(iteration, g, 100, g->color));
+			my_mlx_pixel_put(&img, g, area, ft_deg(iteration, g, 100, g->color));
 		}
 	}
-//	printf("C'est print\n");
+	//	printf("C'est print\n");
 	return (0);
 }
 
@@ -205,24 +228,22 @@ int	ft_mandelbrot(t_all *g, t_data img) // zoom
 {
 	t_complex	c;
 	t_complex	z;
-	int			row;
-	int			col;
 	int			iteration;
 	t_area		area;
 
 	area = ft_init_area_mandelbrot(g);
-	row = 0;
+	g->x = 0;
 	g->fractal = 1;
-//	printf("row = %d\n", row);
-//	printf("area.image_x = %f\n", area.image_x);
-//	printf("area.image_y = %f\n", area.image_y);
-	while (row++ < area.image_x)
+	//	printf("row = %d\n", row);
+	//	printf("area.image_x = %f\n", area.image_x);
+	//	printf("area.image_y = %f\n", area.image_y);
+	while (g->x++ < area.image_x)
 	{
-		col = 0;
-		while (col++ < area.image_y)
+		g->y = 0;
+		while (g->y++ < area.image_y)
 		{
-			c.re = row / area.zoom_x + area.x1;
-			c.im = col / area.zoom_y + area.y1;
+			c.re = g->x / area.zoom_x + area.x1;
+			c.im = g->y / area.zoom_y + area.y1;
 			z.im = 0;
 			z.re = 0;
 			iteration = 0;
@@ -234,29 +255,50 @@ int	ft_mandelbrot(t_all *g, t_data img) // zoom
 				iteration++;
 			}
 			if (iteration == g->max)
-				my_mlx_pixel_put(&img, row + ((g->width - area.w) / 2), col + ((g->height - area.h) / 2), create_trgb(100, 0, 0, 0));
+				my_mlx_pixel_put(&img, g, area, create_trgb(100, 255, 255, 255));
 			else
-				my_mlx_pixel_put(&img, row + ((g->width - area.w) / 2), col + ((g->height - area.h) / 2), ft_deg(iteration, g, 100, g->color));
+				my_mlx_pixel_put(&img, g, area, ft_deg(iteration, g, 100, g->color));
 		}
 	}
-//	printf("C'est print\n");
+	//	printf("C'est print\n");
 	return (0);
 }
 
 int	ft_limits(int key, t_all *g)
 {
-	if (!ft_strncmp(g->av[1], "mandelbrot", 11))
+	if (g->fractal == 1)
 		if (g->zoom >= 1.1 && key == 4)
 			return (1);
-	if (!ft_strncmp(g->av[1], "julia", 6))
+	if (g->fractal == 2)
 		if (g->zoom <= 0.2 && key == 5)
 			return (1);
 	return (0);
 }
 
+int	ft_change(int key, t_all *g)
+{
+	if (key == 106 && g->fractal != 2)
+		g->fractal = 2;
+	else if (key == 109 && g->fractal != 1)
+		g->fractal = 1;
+	else
+			return (0);
+	if (g->fractal == 2)
+	{
+		g->zoom = 1;
+		g->max = 300;
+	}
+	else
+	{
+		g->zoom = 0;
+		g->max = 50;
+	}
+	ft_print_new(g);
+	return (0);
+}
 int	ft_zoom(int key, t_all *g)
 {
-	printf("g->zoom = %f\n", g->zoom);
+	//	printf("g->zoom = %f\n", g->zoom);
 	if (key != 114)
 		if (ft_limits(key, g))
 			return (1);
@@ -266,17 +308,15 @@ int	ft_zoom(int key, t_all *g)
 		g->zoom -= 0.1;
 	else if (key == 114)
 	{
-		if (!ft_strncmp(g->av[1], "julia", 6))
-		{
-			g->zoom = 1;
-			g->max = 300;
-		}
-		else
-		{
+		if (g->fractal == 1)
 			g->zoom = 0;
-			g->max = 50;
-		}
+		else if (g->fractal == 2)
+			g->zoom = 1;
 	}
+	else if (key == 65362 && g->fractal == 2)
+		g->zoom += 10;
+	else if (key == 65364 && g->fractal == 2)
+		g->zoom -= 10;
 	ft_print_new(g);
 	return (0);
 }
@@ -335,18 +375,10 @@ int	ft_input(int keycode, t_all *g)
 		while (i-- > 0)
 			ft_change_color(65363, g);
 	if (keycode == 106 || keycode == 109)
-	{
-		if (keycode == 106 && ft_strncmp(g->av[1], "julia", 6))
-			g->av[1] = "julia";
-		else if (keycode == 109 && ft_strncmp(g->av[1], "mandelbrot", 11))
-			g->av[1] = "mandelbrot";
-		else
-			return (0);
-		ft_zoom(114, g);
-	}
+		ft_change(keycode, g);
 	if (keycode == 113 || keycode == 65307)
 		ft_destroy_win(g);
-	if (keycode == 114)
+	if (keycode == 114 || keycode == 65362 || keycode == 65364)
 		ft_zoom(keycode, g);
 	if (keycode == 65453 || keycode == 65451 || keycode == 65469)
 		ft_net(keycode, g);
@@ -363,7 +395,7 @@ int	main(int ac, char **av)
 		return (1);
 	g->img.img = mlx_new_image(g->setup, g->width, g->height);
 	g->img.addr = mlx_get_data_addr(g->img.img, &g->img.bits_per_pixel, &g->img.line_length, &g->img.endian);
-	if (!ft_strncmp(av[1], "julia", 6))
+	if (g->fractal == 2)
 		ft_julia(g, g->img);
 	else
 		ft_mandelbrot(g, g->img);

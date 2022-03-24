@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 15:31:25 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/23 19:15:04 by nflan            ###   ########.fr       */
+/*   Updated: 2022/03/24 12:12:45 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	ft_man_color(void)
 	ft_printf("Jaune\t= 12\n");
 	ft_printf("Rose\t= 13\n");
 	ft_printf("Turquoise\t= 23\n");
-	ft_printf("ok\t= 50\n");
+	ft_printf("Ideux\t= 50\n");
 	ft_printf("Un peu de tout\t= 123\n");
 	ft_printf("Blanc\t= 255\n");
 	exit (0);
@@ -58,7 +58,7 @@ int	ft_print_new(t_all *g)
 {
 	g->curr.img = mlx_new_image(g->setup, g->width, g->height);
 	g->curr.addr = mlx_get_data_addr(g->curr.img, &g->curr.bits_per_pixel, &g->curr.line_length, &g->curr.endian);
-	if (!ft_strncmp(g->av[1], "mandelbrot", 11))
+	if (g->fractal == 1)
 		ft_mandelbrot(g, g->curr);
 	else
 		ft_julia(g, g->curr);
@@ -92,6 +92,61 @@ int	ft_change_color(int key, t_all *g)
 	}
 	ft_print_new(g);
 	return (0);
+}
+
+int	ft_rgb(t_all *g, int iteration)
+{
+	int	r;
+	int	gg;
+	int	b;
+
+	r = 255;
+	gg = 255;
+	b = 255;
+	int i = g->max / 7;
+	if (iteration == 0)
+	{
+		r = 148;
+		gg = 0;
+		b = 211;
+	}
+	else if (iteration < i * 2)
+	{
+		r = 75;
+		gg = 0;
+		b = 130;
+	}
+	else if (iteration < i * 3)
+	{
+		r = 0;
+		gg = 0;
+		b = 255;
+	}
+	else if (iteration < i * 4)
+	{
+		r = 0;
+		gg = 255;
+		b = 0;
+	}
+	else if (iteration < i * 5)
+	{
+		r = 255;
+		gg = 255;
+		b = 0;
+	}
+	else if (iteration < i * 6)
+	{
+		r = 255;
+		gg = 127;
+		b = 0;
+	}
+	else if (iteration < i * 7)
+	{
+		r = 255;
+		gg = 0;
+		b = 0;
+	}
+	return (create_trgb(100, r, gg, b));
 }
 
 int	ft_deg(int iteration, t_all *g, int t, int i)
@@ -132,7 +187,7 @@ int	ft_deg(int iteration, t_all *g, int t, int i)
 		return (create_trgb(t, color, 0, color));
 	if (i == 23)
 		return (create_trgb(t, 0, color, color));
-	if (i == 50 && !strncmp(g->av[1], "julia", 6))
-		return (create_trgb(t, iteration % 256, 255, 255 * (iteration < g->max)));
+	if (i == 50)
+		return (ft_rgb(g, iteration));
 	return (create_trgb(t, color, color, color));
 }
