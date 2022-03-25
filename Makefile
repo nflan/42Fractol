@@ -6,7 +6,7 @@
 #    By: nflan <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 10:49:49 by nflan             #+#    #+#              #
-#    Updated: 2022/03/24 17:29:56 by nflan            ###   ########.fr        #
+#    Updated: 2022/03/25 17:42:59 by nflan            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,9 @@ vpath %.h libft
 vpath ft_%.c libft
 vpath ft_%.o libft
 
-sources = srcs/main.c srcs/ft_colors.c
+sources = srcs/main.c srcs/ft_colors.c srcs/ft_colors2.c srcs/ft_julia.c \
+		  srcs/ft_mandelbrot.c srcs/ft_zoom.c srcs/ft_utils.c srcs/ft_window.c \
+		  srcs/ft_tools.c
 
 INC = include/fractol.h
 
@@ -47,7 +49,7 @@ all: ${NAME}
 
 $(NAME): ${OBJS} ${INC} ${HEADER} ${LIBFT}
 	$(MAKE) -C minilibx/
-	${CC} ${CFLAGS} ${OBJS} -I ${INC} ${MINILIBX} ${LIBFT} -lXext -lX11 -lm ${DEBUG} -o ${NAME}
+	${CC} ${CFLAGS} ${OBJS} -I ${INC} ${MINILIBX} ${LIBFT} -lXext -lX11 -lm -g3 -o ${NAME}
 
 bonus: ${OBJSB} ${INCB} ${HEADER} ${LIBFT}
 	${RM} ${OBJS}

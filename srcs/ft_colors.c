@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 15:31:25 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/24 17:55:19 by nflan            ###   ########.fr       */
+/*   Updated: 2022/03/25 17:42:16 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,20 @@
 
 int	ft_man_color(void)
 {
-	ft_printf("Voici les couleurs possibles a donner en 4eme argument si besoin :\n\n");
-	ft_printf("Noir\t= 0\n");
-	ft_printf("Rouge\t= 1\n");
-	ft_printf("Vert\t= 2\n");
-	ft_printf("Bleu\t= 3\n");
-	ft_printf("Jaune\t= 12\n");
-	ft_printf("Rose\t= 13\n");
+	ft_printf("Voici les couleurs possibles a donner\
+ en 4eme argument si besoin :\n\n");
+	ft_printf("Noir\t\t= 0\n");
+	ft_printf("Rouge\t\t= 1\n");
+	ft_printf("Vert\t\t= 2\n");
+	ft_printf("Bleu\t\t= 3\n");
+	ft_printf("Jaune\t\t= 12\n");
+	ft_printf("Rose\t\t= 13\n");
 	ft_printf("Turquoise\t= 23\n");
-	ft_printf("Rainbow\t= 50\n");
+	ft_printf("Rainbow\t\t= 50\n");
 	ft_printf("Rainbow psyche\t= 51\n");
 	ft_printf("Un peu de tout\t= 123\n");
 	ft_printf("Rouge psyche\t= 151\n");
-	ft_printf("Blanc\t= 255\n");
+	ft_printf("Blanc\t\t= 255\n");
 	exit (0);
 }
 
@@ -58,21 +59,6 @@ void	ft_init_color(t_all *g)
 	}
 }
 
-int	ft_print_new(t_all *g)
-{
-	g->curr.img = mlx_new_image(g->setup, g->width, g->height);
-	g->curr.addr = mlx_get_data_addr(g->curr.img, &g->curr.bits_per_pixel, &g->curr.line_length, &g->curr.endian);
-	if (g->fractal == 1)
-		ft_mandelbrot(g, g->curr);
-	else
-		ft_julia(g, g->curr);
-	mlx_destroy_image(g->setup, g->img.img);
-	mlx_clear_window(g->setup, g->window);
-	g->img = g->curr;
-	mlx_put_image_to_window(g->setup, g->window, g->img.img, 0, 0);
-	return (0);
-}
-
 int	ft_change_color(int key, t_all *g)
 {
 	int	i;
@@ -98,157 +84,32 @@ int	ft_change_color(int key, t_all *g)
 	return (0);
 }
 
-int	ft_rgb_psy(t_all *g, int iteration)
+int	ft_deg2(int iteration, t_all *g, int i, int color)
 {
-	int	r;
-	int	gg;
-	int	b;
-	int	i;
-
-	i = g->max / 7;
-	if (iteration < i * 2)
-		return (create_trgb(100, iteration, iteration, iteration));
-	if (iteration < i * 3)
-	{
-		r = 0;
-		gg = 0;
-		b = iteration * i;
-	}
-	else if (iteration < i * 4)
-	{
-		r = 0;
-		gg = iteration * i;
-		b = 0;
-	}
-	else if (iteration < i * 5)
-	{
-		r = iteration * i;
-		gg = iteration * i;
-		b = 0;
-	}
-	else if (iteration < i * 6)
-	{
-		r = iteration * i;
-		gg = iteration * i / 2;
-		b = 0;
-	}
-	else if (iteration < i * 7)
-	{
-		r =  iteration * i;
-		gg = 0;
-		b = 0;
-	}
-	else
-	{
-		r = 0;
-		gg = 0;
-		b = 0;
-	}
-	return (create_trgb(100, r, gg, b));
+	if (i == 0 && color > 75)
+		return (create_trgb(100, 255 - color, 255 - color, 255 - color));
+	if (i == 1)
+		return (create_trgb(100, color, 0, 0));
+	if (i == 2)
+		return (create_trgb(100, 0, color, 0));
+	if (i == 3)
+		return (create_trgb(100, 0, 0, color));
+	if (i == 12)
+		return (create_trgb(100, color, color, 0));
+	if (i == 13)
+		return (create_trgb(100, color, 0, color));
+	if (i == 23)
+		return (create_trgb(100, 0, color, color));
+	if (i == 50)
+		return (ft_rgb(g, iteration));
+	if (i == 51)
+		return (ft_rgb_psy(g, iteration));
+	if (i == 151)
+		return (ft_red_psy(g, iteration));
+	return (create_trgb(100, color, color, color));
 }
 
-int	ft_red_psy(t_all *g, int iteration)
-{
-	int	r;
-	int	gg;
-	int	b;
-	int	i;
-
-	i = g->max / 7;
-	if (iteration < i * 2)
-		return (create_trgb(100, iteration, iteration, iteration));
-	if (iteration < i * 3)
-	{
-		r = 0;
-		gg = 0;
-		b = 255 - iteration * i;
-	}
-	else if (iteration < i * 4)
-	{
-		r = 0;
-		gg = 255 - iteration * i;
-		b = 0;
-	}
-	else if (iteration < i * 5)
-	{
-		r = 255 - iteration * i;
-		gg = 255 - iteration * i;
-		b = 0;
-	}
-	else if (iteration < i * 6)
-	{
-		r = 255 - iteration * i;
-		gg = 255 - iteration * i / 2;
-		b = 0;
-	}
-	else if (iteration < i * 7)
-	{
-		r = 255 - iteration * i;
-		gg = 0;
-		b = 0;
-	}
-	else
-	{
-		r = 0;
-		gg = 0;
-		b = 0;
-	}
-	return (create_trgb(100, r, gg, b));
-}
-
-int	ft_rgb(t_all *g, int iteration)
-{
-	int	r;
-	int	gg;
-	int	b;
-	int	i;
-
-	r = 255;
-	gg = 255;
-	b = 255;
-	i = g->max / 7;
-	if (iteration < i * 2)
-		return (create_trgb(100, iteration, iteration, iteration));
-	if (iteration < i * 3)
-	{
-		r = 0;
-		gg = 0;
-		b = 255;
-	}
-	else if (iteration < i * 4)
-	{
-		r = 0;
-		gg = 255;
-		b = 0;
-	}
-	else if (iteration < i * 5)
-	{
-		r = 255;
-		gg = 255;
-		b = 0;
-	}
-	else if (iteration < i * 6)
-	{
-		r = 255;
-		gg = 127;
-		b = 0;
-	}
-	else if (iteration < i * 7)
-	{
-		r = 255;
-		gg = 0;
-		b = 0;
-	}
-	else
-	{
-		r = 0;
-		gg = 0;
-		b = 0;
-	}
-	return (create_trgb(100, r, gg, b));
-}
-
-int	ft_deg(int iteration, t_all *g, int t, int i)
+int	ft_deg(int iteration, t_all *g, int i)
 {
 	int	color;
 
@@ -272,25 +133,5 @@ int	ft_deg(int iteration, t_all *g, int t, int i)
 			i = 3;
 		}
 	}
-	if (i == 0 && color > 75)
-		return (create_trgb(t, 255 - color, 255 - color, 255 - color));
-	if (i == 1)
-		return (create_trgb(t, color, 0, 0));
-	if (i == 2)
-		return (create_trgb(t, 0, color, 0));
-	if (i == 3)
-		return (create_trgb(t, 0, 0, color));
-	if (i == 12)
-		return (create_trgb(t, color, color, 0));
-	if (i == 13)
-		return (create_trgb(t, color, 0, color));
-	if (i == 23)
-		return (create_trgb(t, 0, color, color));
-	if (i == 50)
-		return (ft_rgb(g, iteration));
-	if (i == 51)
-		return (ft_rgb_psy(g, iteration));
-	if (i == 151)
-		return (ft_red_psy(g, iteration));
-	return (create_trgb(t, color, color, color));
+	return (ft_deg2(iteration, g, i, color));
 }
