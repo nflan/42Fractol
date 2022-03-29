@@ -1,16 +1,63 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_utils.c                                         :+:      :+:    :+:   */
+/*   ft_utils_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:24:57 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/29 12:21:32 by nflan            ###   ########.fr       */
+/*   Updated: 2022/03/29 18:24:22 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/fractol.h"
+#include "../include/fractol_bonus.h"
+
+int	ft_move(int key, t_all *g)
+{
+	if (g->fractal == 1)
+	{
+		if (key == 65361)
+		{
+			g->area.x1 *= 1.01;
+			g->area.x2 /= 1.01;
+		}
+		else if (key == 65362)
+		{
+			g->area.y1 /= 1.0133;
+			g->area.y2 *= 1.0133;
+		}
+		else if (key == 65363)
+		{
+			g->area.x1 /= 1.01;
+			g->area.x2 *= 1.01;
+		}
+		else
+		{
+			g->area.y1 *= 1.0133;
+			g->area.y2 /= 1.0133;
+		}
+	}
+	else if (g->fractal == 2)
+	{
+		if (key == 65361)
+		{
+			g->c.re *= 1.01;
+		}
+		else if (key == 65362)
+		{
+			g->c.im /= 1.01;
+		}
+		else if (key == 65363)
+		{
+			g->c.re /= 1.01;
+		}
+		else
+		{
+			g->c.im *= 1.01;
+		}
+	}
+	return (0);
+}
 
 int	ft_input(int keycode, t_all *g)
 {
@@ -25,6 +72,8 @@ int	ft_input(int keycode, t_all *g)
 			ft_change_color(65432, g);
 	else if (keycode == 106 || keycode == 109)
 		ft_change(keycode, g);
+	else if (keycode >= 65361 && keycode <= 65364)
+		ft_move(keycode, g);
 	else if (keycode == 113 || keycode == 65307)
 		ft_destroy_win(g);
 	else if (keycode == 114 || keycode == 65431 || keycode == 65437)
@@ -40,12 +89,18 @@ int	ft_input(int keycode, t_all *g)
 
 int	ft_mouse(int keycode, int x, int y, t_all *g)
 {
-	(void)x;
-	(void)y;
+	g->mousex = (double) x - ((double)g->width - (double)g->area.w) / 2;
+	g->mousey = (double) y - ((double)g->height - (double)g->area.h) / 2;
 	if (keycode == 4 || keycode == 5)
+	{
 		if (ft_zoom(keycode, g))
 			return (1);
-	ft_print_new(g);
+		if (keycode == 4 && g->fractal == 1)
+			ft_init_zoom_mandelbrot(g, 1);
+		if (keycode == 5 && g->fractal == 1)
+			ft_init_zoom_mandelbrot(g, 2);
+		ft_print_new(g);
+	}
 	return (0);
 }
 
@@ -62,7 +117,7 @@ int	ft_net(int key, t_all *g)
 	else if (key == 65469)
 	{
 		if (g->fractal == 1 || (g->fractal == 2
-				&& g->julia > 0 && g->julia < 4))
+					&& g->julia > 0 && g->julia < 4))
 			g->max = 50;
 		else if (g->julia == 0)
 			g->max = 300;

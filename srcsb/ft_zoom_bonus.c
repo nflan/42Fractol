@@ -1,25 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_zoom.c                                          :+:      :+:    :+:   */
+/*   ft_zoom_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:23:25 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/29 12:20:08 by nflan            ###   ########.fr       */
+/*   Updated: 2022/03/29 17:12:23 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/fractol.h"
+#include "../include/fractol_bonus.h"
 
 int	ft_limits(int key, t_all *g)
 {
 	if (g->fractal == 1)
 	{
-		if (key == 65431 || key == 65437)
+		if (g->zoom < 0.5)
+		{
+			g->zoom = 0.5;
 			return (1);
-		if (g->zoom >= 1.1 && key == 4)
-			return (1);
+		}
 	}
 	if (g->fractal == 2)
 		if (g->zoom <= 0.2 && key == 5)
@@ -65,11 +66,11 @@ int	ft_zoom_julia(int key, t_all *g)
 
 int	ft_zoom_mandelbrot(int key, t_all *g)
 {
-	if (key == 4)
-		g->zoom += 0.1;
-	else if (key == 5)
-		g->zoom -= 0.1;
+	if (key == 4 || key == 65431)
+		g->zoom *= 1.5;
+	else if (key == 5 || key == 65437)
+		g->zoom /= 1.5;
 	else if (key == 114)
-		g->zoom = 0;
+		ft_init_mandelbrot(g);	
 	return (0);
 }

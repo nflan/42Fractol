@@ -6,7 +6,7 @@
 #    By: nflan <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 10:49:49 by nflan             #+#    #+#              #
-#    Updated: 2022/03/25 17:42:59 by nflan            ###   ########.fr        #
+#    Updated: 2022/03/29 15:20:10 by nflan            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,13 +20,15 @@ sources = srcs/main.c srcs/ft_colors.c srcs/ft_colors2.c srcs/ft_julia.c \
 
 INC = include/fractol.h
 
-OBJS = ${sources:.c=.o}
+objets = ${sources:.c=.o}
 
-sourcesB = srcsb/main_bonus.c 
+sourcesB = srcsb/main_bonus.c srcsb/ft_colors_bonus.c srcsb/ft_colors2_bonus.c \
+		   srcsb/ft_julia_bonus.c srcsb/ft_mandelbrot_bonus.c srcsb/ft_zoom_bonus.c \
+		   srcsb/ft_utils_bonus.c srcsb/ft_window_bonus.c srcsb/ft_tools_bonus.c
 
 INCB = include/fractol_bonus.h
 
-OBJSB = ${sourcesB:.c=.o}
+objetsB = ${sourcesB:.c=.o}
 
 LIBFT = libft/libft.a
 
@@ -42,39 +44,41 @@ NAME = fractol
 
 DEBUG = -g3 -fsanitize=address
 
-#.c.o :
-#	${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
+.c.o :
+	${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
 
 all: ${NAME}
 
-$(NAME): ${OBJS} ${INC} ${HEADER} ${LIBFT}
-	$(MAKE) -C minilibx/
-	${CC} ${CFLAGS} ${OBJS} -I ${INC} ${MINILIBX} ${LIBFT} -lXext -lX11 -lm -g3 -o ${NAME}
+$(NAME): ${objets} ${INC} ${HEADER} ${LIBFT} ${MINILIBX}
+	${CC} ${CFLAGS} ${objets} ${MINILIBX} ${LIBFT} -I ${INC} -lXext -lX11 -lm -o ${NAME}
 
-bonus: ${OBJSB} ${INCB} ${HEADER} ${LIBFT}
-	${RM} ${OBJS}
-	$(MAKE) -C minilibx/
-	${CC} ${CFLAGS} ${OBJSB} -I ${INCB} -o ${NAME}
+bonus: ${objetsB} ${INCB} ${HEADER} ${LIBFT} ${MINILIBX}
+	${RM} ${objets}
+	${CC} ${CFLAGS} ${objetsB} ${MINILIBX} ${LIBFT} -I ${INCB} -lXext -lX11 -lm ${DEBUG} -o ${NAME}
 
 -include libft/Makefile
 
 ft_%.o : ft_%.c
 	gcc ${CFLAGS} -c $< -o $@
 
-$(LIBFT) : ${SRCS} libft.h
+$(MINILIBX):
+	$(MAKE) -C minilibx/
+
+$(LIBFT) : ${SRCS} ${OBJS} libft.h
 	${MAKE} -C libft/
 
 clean:
 	$(MAKE) clean -C libft/
-	$(MAKE) clean -C minilibx/
-	${RM} ${OBJS} ${OBJSB}
+	${RM} ${objets} ${objetsB}
 
 fclean:
 	$(MAKE) fclean -C libft/
 	$(MAKE) clean -C minilibx/
 	${RM} ${NAME}
-	${RM} ${OBJS} ${OBJSB}
+	${RM} ${objets} ${objetsB}
 
 re: fclean all
 
-.PHONY: all clean fclean bonus re
+#.SECONDARY: $(objets)
+
+.PHONY: all clean fclean bonus re 
