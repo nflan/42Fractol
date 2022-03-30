@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:23:25 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/29 17:12:23 by nflan            ###   ########.fr       */
+/*   Updated: 2022/03/30 11:25:18 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	ft_zoom_julia(int key, t_all *g)
 	else if (key == 5)
 		g->zoom /= 1.1;
 	else if (key == 114)
-		g->zoom = 0.8;
+		ft_init_julia(g, g->julia);
 	else if (key == 65431)
 	{
 		if (g->zoom == 0.186276)

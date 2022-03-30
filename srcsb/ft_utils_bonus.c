@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:24:57 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/29 18:24:22 by nflan            ###   ########.fr       */
+/*   Updated: 2022/03/30 15:08:13 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,43 +18,35 @@ int	ft_move(int key, t_all *g)
 	{
 		if (key == 65361)
 		{
-			g->area.x1 *= 1.01;
-			g->area.x2 /= 1.01;
+			g->area.x1 *= 1.001;
+			g->area.x2 /= 1.001;
 		}
 		else if (key == 65362)
 		{
-			g->area.y1 /= 1.0133;
-			g->area.y2 *= 1.0133;
+			g->area.y1 *= 1.001;
+			g->area.y2 /= 1.001;
 		}
 		else if (key == 65363)
 		{
-			g->area.x1 /= 1.01;
-			g->area.x2 *= 1.01;
+			g->area.x1 /= 1.001;
+			g->area.x2 *= 1.001;
 		}
 		else
 		{
-			g->area.y1 *= 1.0133;
-			g->area.y2 /= 1.0133;
+			g->area.y1 /= 1.001;
+			g->area.y2 *= 1.001;
 		}
 	}
 	else if (g->fractal == 2)
 	{
 		if (key == 65361)
-		{
-			g->c.re *= 1.01;
-		}
+			g->posx += 0.1 / g->zoom;
 		else if (key == 65362)
-		{
-			g->c.im /= 1.01;
-		}
+			g->posy += 0.1 / g->zoom;
 		else if (key == 65363)
-		{
-			g->c.re /= 1.01;
-		}
+			g->posx -= 0.1 / g->zoom;
 		else
-		{
-			g->c.im *= 1.01;
-		}
+			g->posy -= 0.1 / g->zoom;
 	}
 	return (0);
 }
@@ -64,7 +56,7 @@ int	ft_input(int keycode, t_all *g)
 	int	i;
 
 	i = 100;
-	printf("keycode = %d\n", keycode);
+//	printf("keycode = %d\n", keycode);
 	if (keycode == 65430 || keycode == 65432)
 		ft_change_color(keycode, g);
 	else if (keycode == 98)
@@ -91,6 +83,14 @@ int	ft_mouse(int keycode, int x, int y, t_all *g)
 {
 	g->mousex = (double) x - ((double)g->width - (double)g->area.w) / 2;
 	g->mousey = (double) y - ((double)g->height - (double)g->area.h) / 2;
+	if (g->mousex <= 0)
+		g->mousex = 0;
+	if (g->mousex >= g->area.w)
+		g->mousex = g->area.w;
+	if (g->mousey <= 0)
+		g->mousey = 0;
+	if (g->mousey >= g->area.h)
+		g->mousey = g->area.h;
 	if (keycode == 4 || keycode == 5)
 	{
 		if (ft_zoom(keycode, g))
@@ -99,6 +99,10 @@ int	ft_mouse(int keycode, int x, int y, t_all *g)
 			ft_init_zoom_mandelbrot(g, 1);
 		if (keycode == 5 && g->fractal == 1)
 			ft_init_zoom_mandelbrot(g, 2);
+		if (keycode == 4 && g->fractal == 2)
+			ft_init_zoom_julia(g, 1);
+		if (keycode == 5 && g->fractal == 2)
+			ft_init_zoom_julia(g, 2);
 		ft_print_new(g);
 	}
 	return (0);

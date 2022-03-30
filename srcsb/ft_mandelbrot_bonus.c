@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:22:13 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/29 18:11:33 by nflan            ###   ########.fr       */
+/*   Updated: 2022/03/30 15:21:24 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ void	ft_init_mandelbrot(t_all *g)
 	g->area.x2 = 0.6;
 	g->area.y1 = -1.2;
 	g->area.y2 = 1.2;
-	g->area.zoom_x = g->zoom;
-	g->area.zoom_y = g->zoom;
+	g->area.zoom_x = g->area.w / (g->area.x2 - g->area.x1);
+	g->area.zoom_y = g->area.h / (g->area.y2 - g->area.y1);
 }
 
 void	ft_init_zoom_mandelbrot(t_all *g, int z)
@@ -43,13 +43,7 @@ void	ft_init_zoom_mandelbrot(t_all *g, int z)
 	tmp = g->area;
 	X = g->area.x1 + g->mousex * (g->area.x2 - g->area.x1) / g->area.w;
 	Y = g->area.y1 + g->mousey * (g->area.y2 - g->area.y1) / g->area.h;
-	if (z == 2)
-	{
-		g->area.x1 = X - (tmp.x2 - tmp.x1);
-		g->area.x2 = X + (tmp.x2 - tmp.x1);
-		g->area.y1 = Y - (tmp.y2 - tmp.y1);
-		g->area.y2 = Y + (tmp.y2 - tmp.y1);
-	}
+	printf("x = %f\n", X);
 	if (z == 1)
 	{
 		g->area.x1 = X - (tmp.x2 - tmp.x1) / 4;
@@ -57,8 +51,15 @@ void	ft_init_zoom_mandelbrot(t_all *g, int z)
 		g->area.y1 = Y - (tmp.y2 - tmp.y1) / 4;
 		g->area.y2 = Y + (tmp.y2 - tmp.y1) / 4;
 	}
-	g->area.zoom_x = g->zoom;
-	g->area.zoom_y = g->zoom;
+	if (z == 2)
+	{
+		g->area.x1 = X - (tmp.x2 - tmp.x1);
+		g->area.x2 = X + (tmp.x2 - tmp.x1);
+		g->area.y1 = Y - (tmp.y2 - tmp.y1);
+		g->area.y2 = Y + (tmp.y2 - tmp.y1);
+	}
+	g->area.zoom_x = g->area.w / (g->area.x2 - g->area.x1);
+	g->area.zoom_y = g->area.h / (g->area.y2 - g->area.y1);
 }
 
 void	ft_check_mandelbrot(t_all *g)
@@ -66,7 +67,7 @@ void	ft_check_mandelbrot(t_all *g)
 	if (g->max >= 3800)
 		g->max = 3800;
 	g->fractal = 1;
-	g->x = -1;
+	g->x = 0;
 }
 
 void	ft_mandelbrot(t_all *g, t_data img)
@@ -74,11 +75,12 @@ void	ft_mandelbrot(t_all *g, t_data img)
 	t_complex		z;
 	unsigned int	iteration;
 
+	printf("g->zoom = %f\n", g->zoom);
 	ft_check_mandelbrot(g);
-	while (++g->x < g->area.w)
+	while (g->x++ < g->area.w)
 	{
-		g->y = -1;
-		while (++g->y < g->area.h)
+		g->y = 0;
+		while (g->y++ < g->area.h)
 		{
 			g->c.re = g->x / g->area.zoom_x + g->area.x1;
 			g->c.im = g->y / g->area.zoom_y + g->area.y1;

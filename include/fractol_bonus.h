@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 10:52:06 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/29 18:05:53 by nflan            ###   ########.fr       */
+/*   Updated: 2022/03/30 11:20:49 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ typedef struct s_all
 	int				x;
 	int				y;
 	int				fractal;
+	double			posx;
+	double			posy;
 	double			mousex;
 	double			mousey;
 	unsigned int	max;
@@ -113,7 +115,8 @@ int		ft_destroy_win(t_all *g);
 // JULIA
 void	ft_julia_tool(t_all *g, double re, double im, int max);
 void	ft_init_julia(t_all *g, int e);
-void	ft_init_zoom_julia(t_all *g);
+void	ft_init_zoom_julia(t_all *g, int z);
+void	ft_check_julia(t_all *g);
 void	ft_julia(t_all *g, t_data img);
 
 // MABNDELBROT

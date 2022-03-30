@@ -6,7 +6,7 @@
 #    By: nflan <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 10:49:49 by nflan             #+#    #+#              #
-#    Updated: 2022/03/29 15:20:10 by nflan            ###   ########.fr        #
+#    Updated: 2022/03/30 11:15:10 by nflan            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,12 +47,12 @@ DEBUG = -g3 -fsanitize=address
 .c.o :
 	${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
 
-all: ${NAME}
+all:	${NAME}
 
-$(NAME): ${objets} ${INC} ${HEADER} ${LIBFT} ${MINILIBX}
+$(NAME):	${objets} ${INC} ${HEADER} ${LIBFT} ${MINILIBX}
 	${CC} ${CFLAGS} ${objets} ${MINILIBX} ${LIBFT} -I ${INC} -lXext -lX11 -lm -o ${NAME}
 
-bonus: ${objetsB} ${INCB} ${HEADER} ${LIBFT} ${MINILIBX}
+bonus:	${objetsB} ${INCB} ${HEADER} ${LIBFT} ${MINILIBX}
 	${RM} ${objets}
 	${CC} ${CFLAGS} ${objetsB} ${MINILIBX} ${LIBFT} -I ${INCB} -lXext -lX11 -lm ${DEBUG} -o ${NAME}
 
@@ -64,8 +64,12 @@ ft_%.o : ft_%.c
 $(MINILIBX):
 	$(MAKE) -C minilibx/
 
-$(LIBFT) : ${SRCS} ${OBJS} libft.h
+$(LIBFT):	${SRCS} ${OBJS} libft.h
 	${MAKE} -C libft/
+
+$(objets):	${INC}
+
+$(objetsB):	${INCB}
 
 clean:
 	$(MAKE) clean -C libft/
