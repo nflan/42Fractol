@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:24:57 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/30 15:08:13 by nflan            ###   ########.fr       */
+/*   Updated: 2022/03/31 18:47:43 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,35 @@
 
 int	ft_move(int key, t_all *g)
 {
+	double	pos;
+//	if (g->fractal == 1)
+//	{
+
 	if (g->fractal == 1)
+		pos = 1.001;
+	else if (g->fractal == 2)
+		pos = 1.1;
+	if (key == 65361)
 	{
-		if (key == 65361)
-		{
-			g->area.x1 *= 1.001;
-			g->area.x2 /= 1.001;
-		}
-		else if (key == 65362)
-		{
-			g->area.y1 *= 1.001;
-			g->area.y2 /= 1.001;
-		}
-		else if (key == 65363)
-		{
-			g->area.x1 /= 1.001;
-			g->area.x2 *= 1.001;
-		}
-		else
-		{
-			g->area.y1 /= 1.001;
-			g->area.y2 *= 1.001;
-		}
+		g->area.x1 *= pos;
+		g->area.x2 /= pos;
 	}
+	else if (key == 65362)
+	{
+		g->area.y1 *= pos;
+		g->area.y2 /= pos;
+	}
+	else if (key == 65363)
+	{
+		g->area.x1 /= pos;
+		g->area.x2 *= pos;
+	}
+	else
+	{
+		g->area.y1 /= pos;
+		g->area.y2 *= pos;
+	}
+/*	}
 	else if (g->fractal == 2)
 	{
 		if (key == 65361)
@@ -48,7 +54,7 @@ int	ft_move(int key, t_all *g)
 		else
 			g->posy -= 0.1 / g->zoom;
 	}
-	return (0);
+*/	return (0);
 }
 
 int	ft_input(int keycode, t_all *g)
@@ -83,6 +89,7 @@ int	ft_mouse(int keycode, int x, int y, t_all *g)
 {
 	g->mousex = (double) x - ((double)g->width - (double)g->area.w) / 2;
 	g->mousey = (double) y - ((double)g->height - (double)g->area.h) / 2;
+//	printf("g->mousex = %f && g->mousey = %f\n", g->mousex, g->mousey);
 	if (g->mousex <= 0)
 		g->mousex = 0;
 	if (g->mousex >= g->area.w)
