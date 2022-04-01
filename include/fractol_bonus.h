@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 10:52:06 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/30 11:20:49 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/01 16:51:08 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,10 +96,10 @@ int		ft_input(int keycode, t_all *g);
 int		ft_print_new(t_all *g);
 
 // ZOOM
-int		ft_zoom_mandelbrot(int key, t_all *g);
-int		ft_zoom_julia(int key, t_all *g);
 int		ft_zoom(int key, t_all *g);
 int		ft_limits(int key, t_all *g);
+int		ft_zoom_julia(int key, t_all *g);
+int		ft_zoom_mandelbrot(int key, t_all *g);
 
 // TOOLS
 void	ft_free_all(t_all *g);

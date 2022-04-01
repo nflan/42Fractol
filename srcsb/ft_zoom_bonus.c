@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:23:25 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/30 11:25:18 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/01 16:57:30 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,23 @@
 
 int	ft_limits(int key, t_all *g)
 {
+	printf("Zoom = %f\n", g->zoom);
 	if (g->fractal == 1)
 	{
-		if (g->zoom < 0.5)
+		if (g->zoom <= 20 && key == 5)
 		{
-			g->zoom = 0.5;
+			g->zoom = 20;
 			return (1);
 		}
 	}
 	if (g->fractal == 2)
-		if (g->zoom <= 0.2 && key == 5)
+	{
+		if (g->zoom <= 0.41 && key == 5)
+		{
+			g->zoom = 0.41;
 			return (1);
+		}
+	}
 	return (0);
 }
 
@@ -48,19 +54,6 @@ int	ft_zoom_julia(int key, t_all *g)
 		g->zoom /= 1.1;
 	else if (key == 114)
 		ft_init_julia(g, g->julia);
-	else if (key == 65431)
-	{
-		if (g->zoom == 0.186276)
-			g->zoom = 0.8;
-		else
-			g->zoom *= 10;
-	}
-	else if (key == 65437)
-	{
-		g->zoom /= 10;
-		if (g->zoom < 0.186276)
-			g->zoom = 0.186276;
-	}
 	return (0);
 }
 
