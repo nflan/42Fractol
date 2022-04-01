@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:18:15 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/01 17:45:46 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/01 17:52:59 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ void	ft_init_julia(t_all *g, int e)
 	if (e == 0 || e == 48)
 		ft_julia_tool(g, -0.7, 0.27015, 300);
 	else if (e == 1 || e == 49)
-		ft_julia_tool(g, -0.4, 0.582, 50);
+		ft_julia_tool(g, -0.4, 0.582, 70);
 	else if (e == 2 || e == 50)
-		ft_julia_tool(g, -1.25, 0, 50);
+		ft_julia_tool(g, -1.25, 0, 70);
 	else if (e == 3 || e == 51)
-		ft_julia_tool(g, 0.44, 0.25, 50);
+		ft_julia_tool(g, 0.44, 0.25, 70);
 	else if (e == 4 || e == 52)
 		ft_julia_tool(g, -0.56, 0.645, 100);
 	else if (e == 5 || e == 53)
