@@ -6,11 +6,31 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:26:52 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/28 18:52:56 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/04 15:37:13 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fractol_bonus.h"
+
+t_data	ft_init_img(t_all *g)
+{
+	t_data	img;
+
+	img.img = NULL;
+	img.addr = NULL;
+	img.img = mlx_new_image(g->setup, g->width, g->height);
+	if (!img.img)
+		ft_destroy_win(g, 1);
+	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel,
+			&img.line_length, &img.endian);
+	if (!img.addr)
+	{
+		free(img.img);
+		img.img = NULL;
+		ft_destroy_win(g, 1);
+	}
+	return (img);
+}
 
 int	create_trgb(int t, int r, int g, int b)
 {
@@ -33,16 +53,17 @@ void	my_mlx_pixel_put(t_data *data, t_all *g, int color)
 	}
 }
 
-int	ft_destroy_win(t_all *g)
+int	ft_destroy_win(t_all *g, int out)
 {
 	if (g->window)
 	{
-		mlx_destroy_image(g->setup, g->img.img);
+		if (g->img.img && g->img.addr)
+			mlx_destroy_image(g->setup, g->img.img);
 		mlx_clear_window(g->setup, g->window);
 		mlx_destroy_window(g->setup, g->window);
 	}
 	if (g->setup)
 		mlx_destroy_display(g->setup);
-	ft_free_all(g);
-	exit (0);
+	ft_free_all(g, out);
+	exit (out);
 }

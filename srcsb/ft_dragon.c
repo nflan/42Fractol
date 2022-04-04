@@ -1,22 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_mandelbrot_bonus.c                              :+:      :+:    :+:   */
+/*   ft_dragon.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/25 15:22:13 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/04 15:39:07 by nflan            ###   ########.fr       */
+/*   Created: 2022/04/04 17:23:19 by nflan             #+#    #+#             */
+/*   Updated: 2022/04/04 17:40:02 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fractol_bonus.h"
 
-void	ft_init_mandelbrot(t_all *g)
+void	ft_init_dragon(t_all *g)
 {
 	g->zoom = 50;
 	g->max = 70;
-	g->fractal = 1;
+	g->fractal = 3;
 	g->area.w = g->width;
 	g->area.h = g->height;
 	while ((double)g->area.w / (double)g->area.h != 1.125)
@@ -26,28 +26,28 @@ void	ft_init_mandelbrot(t_all *g)
 		if ((double)g->area.w / (double)g->area.h < 1.125)
 			g->area.h--;
 	}
-	g->area.x1 = -2.1;
-	g->area.x2 = 0.6;
-	g->area.y1 = -1.2;
-	g->area.y2 = 1.2;
+	g->area.x1 = 0;
+	g->area.x2 = 1;
+	g->area.y1 = 1;
+	g->area.y2 = 0;
 	g->area.zoom_x = g->area.w / (g->area.x2 - g->area.x1);
 	g->area.zoom_y = g->area.h / (g->area.y2 - g->area.y1);
 }
 
-void	ft_check_mandelbrot(t_all *g)
+void	ft_check_dragon(t_all *g)
 {
 	if (g->max >= 3800)
 		g->max = 3800;
-	g->fractal = 1;
+	g->fractal = 3;
 	g->x = 0;
 }
 
-void	ft_mandelbrot(t_all *g, t_data img)
+void	ft_dragon(t_all *g, t_data img)
 {
 	t_complex		z;
 	unsigned int	iteration;
 
-	ft_check_mandelbrot(g);
+	ft_check_dragon(g);
 	while (g->x++ < g->area.w)
 	{
 		g->y = 0;

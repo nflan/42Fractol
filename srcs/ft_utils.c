@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:24:57 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/29 12:21:32 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/04 17:06:13 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,19 @@
 
 int	ft_input(int keycode, t_all *g)
 {
-	int	i;
-
-	i = 100;
-	printf("keycode = %d\n", keycode);
 	if (keycode == 65430 || keycode == 65432)
-		ft_change_color(keycode, g);
+		return (ft_change_color(keycode, g));
 	else if (keycode == 98)
-		while (i-- > 0)
+	{
+		while (keycode-- > 0)
 			ft_change_color(65432, g);
+		return (0);
+	}
 	else if (keycode == 106 || keycode == 109)
 		ft_change(keycode, g);
 	else if (keycode == 113 || keycode == 65307)
-		ft_destroy_win(g);
-	else if (keycode == 114 || keycode == 65431 || keycode == 65437)
+		ft_destroy_win(g, 0);
+	else if (keycode == 114)
 		if (ft_zoom(keycode, g))
 			return (1);
 	if ((keycode >= 65450 && keycode <= 65455) || keycode == 65469)
@@ -43,9 +42,11 @@ int	ft_mouse(int keycode, int x, int y, t_all *g)
 	(void)x;
 	(void)y;
 	if (keycode == 4 || keycode == 5)
+	{
 		if (ft_zoom(keycode, g))
 			return (1);
-	ft_print_new(g);
+		ft_print_new(g);
+	}
 	return (0);
 }
 
@@ -89,9 +90,7 @@ int	ft_change(int key, t_all *g)
 
 int	ft_print_new(t_all *g)
 {
-	g->curr.img = mlx_new_image(g->setup, g->width, g->height);
-	g->curr.addr = mlx_get_data_addr(g->curr.img, &g->curr.bits_per_pixel,
-			&g->curr.line_length, &g->curr.endian);
+	g->curr = ft_init_img(g);
 	if (g->fractal == 1)
 		ft_mandelbrot(g, g->curr);
 	else

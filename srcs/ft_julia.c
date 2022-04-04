@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:18:15 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/29 12:14:26 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/04 16:46:42 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@ void	ft_julia_tool(t_all *g, double re, double im, int max)
 	g->c.re = re;
 	g->c.im = im;
 	g->max = max;
+	g->area.x1 = -1.25;
+	g->area.x2 = 1.25;
+	g->area.y1 = -1.25;
+	g->area.y2 = 1.25;
 	if (g->julia >= 48 && g->julia <= 58)
 		while (i++ < 10)
 			if (i + 48 == g->julia)
@@ -33,12 +37,15 @@ void	ft_julia_tool(t_all *g, double re, double im, int max)
 		if ((double)g->area.w / (double)g->area.h < 1.3)
 			g->area.h--;
 	}
+	g->area.zoom_x = g->area.w / (g->area.x2 - g->area.x1);
+	g->area.zoom_y = g->area.h / (g->area.y2 - g->area.y1);
 }
 
 void	ft_init_julia(t_all *g, int e)
 {
 	g->julia = e;
-	g->zoom = 0.8;
+	g->zoom = 50;
+	g->fractal = 2;
 	if (e == 0 || e == 48)
 		ft_julia_tool(g, -0.7, 0.27015, 300);
 	else if (e == 1 || e == 49)
@@ -59,17 +66,16 @@ void	ft_init_julia(t_all *g, int e)
 		ft_julia_tool(g, 0.285, 0.01, 150);
 	else if (e == 9 || e == 57)
 		ft_julia_tool(g, -0.1, 0.65, 200);
-	g->fractal = 2;
 }
 
-void	ft_init_zoom_julia(t_all *g)
+void	ft_check_julia(t_all *g)
 {
 	if (g->max >= 3200)
 		g->max = 3200;
 	g->fractal = 2;
 	g->y = 0;
-	g->area.zoom_x = 0.5 * g->zoom * g->area.w;
-	g->area.zoom_y = 0.5 * g->zoom * g->area.h;
+	g->posx = (g->area.x1 + g->area.x2) / 2;
+	g->posy = (g->area.y1 + g->area.y2) / 2;
 }
 
 void	ft_julia(t_all *g, t_data img)
@@ -77,16 +83,16 @@ void	ft_julia(t_all *g, t_data img)
 	t_complex		z;
 	unsigned int	iteration;
 
-	ft_init_zoom_julia(g);
+	ft_check_julia(g);
 	while (g->y++ < g->area.h)
 	{
 		g->x = 0;
 		while (g->x++ < g->area.w)
 		{
-			z.re = 1.5 * (g->x - g->area.w / 2) / g->area.zoom_x;
-			z.im = (g->y - g->area.h / 2) / g->area.zoom_y;
+			z.re = 1.5 * (g->x - g->area.w / 2) / g->area.zoom_x + g->posx;
+			z.im = (g->y - g->area.h / 2) / g->area.zoom_y + g->posy;
 			iteration = 0;
-			while (z.re * z.re + z.im * z.im <= 4 && iteration < g->max)
+			while (z.re * z.re + z.im * z.im < 4 && iteration < g->max)
 			{
 				z.tmpre = z.re;
 				z.re = z.tmpre * z.tmpre - z.im * z.im + g->c.re;

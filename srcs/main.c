@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 10:51:37 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/25 17:20:19 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/04 16:49:32 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,12 @@ int	main(int ac, char **av)
 {
 	t_all	*g;
 
+	g = NULL;
 	ft_parse(ac, av, 0);
 	g = ft_init_all(av);
 	if (g)
 	{
-		g->img.img = mlx_new_image(g->setup, g->width, g->height);
-		g->img.addr = mlx_get_data_addr(g->img.img, &g->img.bits_per_pixel,
-				&g->img.line_length, &g->img.endian);
+		g->img = ft_init_img(g);
 		if (g->fractal == 2)
 			ft_julia(g, g->img);
 		else

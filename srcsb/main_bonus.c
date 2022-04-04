@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 10:51:37 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/29 15:52:35 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/04 17:25:49 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,18 @@ int	main(int ac, char **av)
 {
 	t_all	*g;
 
+	g = NULL;
 	ft_parse(ac, av, 0);
 	g = ft_init_all(av);
 	if (g)
 	{
-		g->img.img = mlx_new_image(g->setup, g->width, g->height);
-		g->img.addr = mlx_get_data_addr(g->img.img, &g->img.bits_per_pixel,
-				&g->img.line_length, &g->img.endian);
-		if (g->fractal == 2)
+		g->img = ft_init_img(g);
+		if (g->fractal == 1)
+			ft_mandelbrot(g, g->img);
+		else if (g->fractal == 2)
 			ft_julia(g, g->img);
 		else
-			ft_mandelbrot(g, g->img);
+			ft_dragon(g, g->img);
 		mlx_put_image_to_window(g->setup, g->window, g->img.img, 0, 0);
 		mlx_hook(g->window, 2, 1L << 0, ft_input, g);
 		mlx_hook(g->window, 4, 1L << 2, ft_mouse, g);

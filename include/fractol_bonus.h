@@ -6,12 +6,12 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 10:52:06 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/01 16:51:08 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/04 17:26:19 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FRACTOL_H
-# define FRACTOL_H
+#ifndef FRACTOL_BONUS_H
+# define FRACTOL_BONUS_H
 
 # include "../minilibx/mlx.h"
 # include "../libft/libft.h"
@@ -82,46 +82,57 @@ typedef struct s_color
 int		ft_man_color(void);
 void	ft_init_color(t_all *g);
 int		ft_change_color(int key, t_all *g);
+int		ft_deg2(int iteration, t_all *g, int i, int color);
+int		ft_deg(int iteration, t_all *g, int i);
+// 2
 int		ft_rgb_psy(t_all *g, int iteration);
 int		ft_red_psy(t_all *g, int iteration);
 int		ft_rgb(t_all *g, int iteration);
-int		ft_deg2(int iteration, t_all *g, int i, int color);
-int		ft_deg(int iteration, t_all *g, int i);
 
 // UTILS
-int		ft_change(int key, t_all *g);
-int		ft_net(int key, t_all *g);
-int		ft_mouse(int keycode, int x, int y, t_all *g);
+void	ft_move(int key, t_all *g);
 int		ft_input(int keycode, t_all *g);
-int		ft_print_new(t_all *g);
+int		ft_mouse(int keycode, int x, int y, t_all *g);
+int		ft_net(int key, t_all *g);
+int		ft_change(int key, t_all *g);
 
 // ZOOM
-int		ft_zoom(int key, t_all *g);
 int		ft_limits(int key, t_all *g);
-int		ft_zoom_julia(int key, t_all *g);
-int		ft_zoom_mandelbrot(int key, t_all *g);
+int		ft_zoom(int key, t_all *g);
+void	ft_init_zoom(t_all *g, int z);
 
 // TOOLS
-void	ft_free_all(t_all *g);
+void	ft_free_all(t_all *g, int out);
 char	*ft_strlower(char *str);
+void	ft_init_window(t_all *g);
 t_all	*ft_init_all(char **av);
+int		ft_print_new(t_all *g);
+
+// PARSE
+char	**ft_parse_nbr(char **av);
+int		ft_compare(char **av);
 int		ft_parse(int ac, char **av, int i);
 
 // WINDOW
+t_data	ft_init_img(t_all *g);
 int		create_trgb(int t, int r, int g, int b);
 void	my_mlx_pixel_put(t_data *data, t_all *g, int color);
-int		ft_destroy_win(t_all *g);
+int		ft_destroy_win(t_all *g, int out);
 
 // JULIA
 void	ft_julia_tool(t_all *g, double re, double im, int max);
 void	ft_init_julia(t_all *g, int e);
-void	ft_init_zoom_julia(t_all *g, int z);
 void	ft_check_julia(t_all *g);
 void	ft_julia(t_all *g, t_data img);
 
-// MABNDELBROT
+// MANDELBROT
 void	ft_init_mandelbrot(t_all *g);
-void	ft_init_zoom_mandelbrot(t_all *g, int z);
+void	ft_check_mandelbrot(t_all *g);
 void	ft_mandelbrot(t_all *g, t_data img);
+
+// DRAGON
+void	ft_init_dragon(t_all *g);
+void	ft_check_dragon(t_all *g);
+void	ft_dragon(t_all *g, t_data img);
 
 #endif

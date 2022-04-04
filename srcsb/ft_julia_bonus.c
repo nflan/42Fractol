@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:18:15 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/01 17:52:59 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/04 15:20:22 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ void	ft_julia_tool(t_all *g, double re, double im, int max)
 	g->c.re = re;
 	g->c.im = im;
 	g->max = max;
-	g->posx = (g->area.x1 + g->area.x2) / 2;
-	g->posy = (g->area.y1 + g->area.y2) / 2;
 	g->area.x1 = -1.25;
 	g->area.x2 = 1.25;
 	g->area.y1 = -1.25;
@@ -46,7 +44,8 @@ void	ft_julia_tool(t_all *g, double re, double im, int max)
 void	ft_init_julia(t_all *g, int e)
 {
 	g->julia = e;
-	g->zoom = 0.8;
+	g->zoom = 50;
+	g->fractal = 2;
 	if (e == 0 || e == 48)
 		ft_julia_tool(g, -0.7, 0.27015, 300);
 	else if (e == 1 || e == 49)
@@ -67,35 +66,6 @@ void	ft_init_julia(t_all *g, int e)
 		ft_julia_tool(g, 0.285, 0.01, 150);
 	else if (e == 9 || e == 57)
 		ft_julia_tool(g, -0.1, 0.65, 200);
-	g->fractal = 2;
-}
-
-void	ft_init_zoom_julia(t_all *g, int z)
-{
-	t_area	tmp;
-	double	X;
-	double	Y;
-
-	tmp = g->area;
-	X = g->area.x1 + g->mousex * (g->area.x2 - g->area.x1) / g->area.w;
-	Y = g->area.y1 + g->mousey * (g->area.y2 - g->area.y1) / g->area.h;
-//	printf("X = %f && Y = %f\n", X, Y);
-	if (z == 1)
-	{
-		g->area.x1 = X - (tmp.x2 - tmp.x1) / 4;
-		g->area.x2 = X + (tmp.x2 - tmp.x1) / 4;
-		g->area.y1 = Y - (tmp.y2 - tmp.y1) / 4;
-		g->area.y2 = Y + (tmp.y2 - tmp.y1) / 4;
-	}
-	if (z == 2)
-	{
-		g->area.x1 = X - (tmp.x2 - tmp.x1);
-		g->area.x2 = X + (tmp.x2 - tmp.x1);
-		g->area.y1 = Y - (tmp.y2 - tmp.y1);
-		g->area.y2 = Y + (tmp.y2 - tmp.y1);
-	}
-	g->area.zoom_x = g->area.w / (g->area.x2 - g->area.x1);
-	g->area.zoom_y = g->area.h / (g->area.y2 - g->area.y1);
 }
 
 void	ft_check_julia(t_all *g)
@@ -124,9 +94,9 @@ void	ft_julia(t_all *g, t_data img)
 			iteration = 0;
 			while (z.re * z.re + z.im * z.im < 4 && iteration < g->max)
 			{
-				z.tmpre = z.re * z.re - z.im * z.im + g->c.re;
-				z.im = z.im * z.re + z.im * z.re + g->c.im;
-				z.re = z.tmpre;
+				z.tmpre = z.re;
+				z.re = z.tmpre * z.tmpre - z.im * z.im + g->c.re;
+				z.im = z.im * z.tmpre + z.im * z.tmpre + g->c.im;
 				iteration++;
 			}
 			if (iteration != g->max)

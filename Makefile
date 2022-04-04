@@ -6,7 +6,7 @@
 #    By: nflan <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 10:49:49 by nflan             #+#    #+#              #
-#    Updated: 2022/03/30 11:15:10 by nflan            ###   ########.fr        #
+#    Updated: 2022/04/04 17:28:28 by nflan            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ vpath ft_%.o libft
 
 sources = srcs/main.c srcs/ft_colors.c srcs/ft_colors2.c srcs/ft_julia.c \
 		  srcs/ft_mandelbrot.c srcs/ft_zoom.c srcs/ft_utils.c srcs/ft_window.c \
-		  srcs/ft_tools.c
+		  srcs/ft_tools.c srcs/ft_parse.c
 
 INC = include/fractol.h
 
@@ -24,7 +24,8 @@ objets = ${sources:.c=.o}
 
 sourcesB = srcsb/main_bonus.c srcsb/ft_colors_bonus.c srcsb/ft_colors2_bonus.c \
 		   srcsb/ft_julia_bonus.c srcsb/ft_mandelbrot_bonus.c srcsb/ft_zoom_bonus.c \
-		   srcsb/ft_utils_bonus.c srcsb/ft_window_bonus.c srcsb/ft_tools_bonus.c
+		   srcsb/ft_utils_bonus.c srcsb/ft_window_bonus.c srcsb/ft_tools_bonus.c \
+		   srcsb/ft_parse_bonus.c srcsb/ft_dragon.c
 
 INCB = include/fractol_bonus.h
 

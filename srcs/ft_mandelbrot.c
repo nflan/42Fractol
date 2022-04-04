@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:22:13 by nflan             #+#    #+#             */
-/*   Updated: 2022/03/25 17:38:38 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/04 16:29:24 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	ft_init_mandelbrot(t_all *g)
 {
-	g->zoom = 0;
-	g->max = 50;
+	g->zoom = 50;
+	g->max = 70;
 	g->fractal = 1;
 	g->area.w = g->width;
 	g->area.h = g->height;
@@ -26,20 +26,20 @@ void	ft_init_mandelbrot(t_all *g)
 		if ((double)g->area.w / (double)g->area.h < 1.125)
 			g->area.h--;
 	}
+	g->area.x1 = -2.1;
+	g->area.x2 = 0.6;
+	g->area.y1 = -1.2;
+	g->area.y2 = 1.2;
+	g->area.zoom_x = g->area.w / (g->area.x2 - g->area.x1);
+	g->area.zoom_y = g->area.h / (g->area.y2 - g->area.y1);
 }
 
-void	ft_init_zoom_mandelbrot(t_all *g)
+void	ft_check_mandelbrot(t_all *g)
 {
 	if (g->max >= 3800)
 		g->max = 3800;
-	g->x = 0;
 	g->fractal = 1;
-	g->area.x1 = -2.1 + g->zoom;
-	g->area.x2 = 0.6 - g->zoom;
-	g->area.y1 = -1.2 + g->zoom;
-	g->area.y2 = 1.2 - g->zoom;
-	g->area.zoom_x = g->area.w / (g->area.x2 - g->area.x1);
-	g->area.zoom_y = g->area.h / (g->area.y2 - g->area.y1);
+	g->x = 0;
 }
 
 void	ft_mandelbrot(t_all *g, t_data img)
@@ -47,7 +47,7 @@ void	ft_mandelbrot(t_all *g, t_data img)
 	t_complex		z;
 	unsigned int	iteration;
 
-	ft_init_zoom_mandelbrot(g);
+	ft_check_mandelbrot(g);
 	while (g->x++ < g->area.w)
 	{
 		g->y = 0;
