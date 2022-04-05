@@ -6,7 +6,7 @@
 #    By: nflan <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 10:49:49 by nflan             #+#    #+#              #
-#    Updated: 2022/04/04 17:28:28 by nflan            ###   ########.fr        #
+#    Updated: 2022/04/05 12:45:07 by nflan            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ objets = ${sources:.c=.o}
 sourcesB = srcsb/main_bonus.c srcsb/ft_colors_bonus.c srcsb/ft_colors2_bonus.c \
 		   srcsb/ft_julia_bonus.c srcsb/ft_mandelbrot_bonus.c srcsb/ft_zoom_bonus.c \
 		   srcsb/ft_utils_bonus.c srcsb/ft_window_bonus.c srcsb/ft_tools_bonus.c \
-		   srcsb/ft_parse_bonus.c srcsb/ft_dragon.c
+		   srcsb/ft_parse_bonus.c srcsb/ft_glynn.c
 
 INCB = include/fractol_bonus.h
 
@@ -55,7 +55,7 @@ $(NAME):	${objets} ${INC} ${HEADER} ${LIBFT} ${MINILIBX}
 
 bonus:	${objetsB} ${INCB} ${HEADER} ${LIBFT} ${MINILIBX}
 	${RM} ${objets}
-	${CC} ${CFLAGS} ${objetsB} ${MINILIBX} ${LIBFT} -I ${INCB} -lXext -lX11 -lm ${DEBUG} -o ${NAME}
+	${CC} ${CFLAGS} ${objetsB} ${MINILIBX} ${LIBFT} -I ${INCB} -lXext -lX11 -lm -o ${NAME}
 
 -include libft/Makefile
 

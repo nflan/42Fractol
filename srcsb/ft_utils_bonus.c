@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:24:57 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/04 17:40:09 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/05 12:34:07 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	ft_input(int keycode, t_all *g)
 			ft_change_color(65432, g);
 		return (0);
 	}
-	else if (keycode == 106 || keycode == 109 || keycode == 100)
+	else if (keycode == 106 || keycode == 109 || keycode == 103)
 		ft_change(keycode, g);
 	else if (keycode >= 65361 && keycode <= 65364)
 		ft_move(keycode, g);
@@ -72,7 +72,6 @@ int	ft_mouse(int keycode, int x, int y, t_all *g)
 {
 	g->mousex = (double) x - ((double)g->width - (double)g->area.w) / 2;
 	g->mousey = (double) y - ((double)g->height - (double)g->area.h) / 2;
-//	printf("g->mousex = %f && g->mousey = %f\n", g->mousex, g->mousey);
 	if (g->mousex <= 0)
 		g->mousex = 0;
 	if (g->mousex >= g->area.w)
@@ -129,7 +128,7 @@ int	ft_change(int key, t_all *g)
 		ft_init_mandelbrot(g);
 	else if (key == 106 && g->fractal != 2)
 		ft_init_julia(g, g->julia);
-	else if (key == 100 && g->fractal != 3)
-		ft_init_dragon(g);
+	else if (key == 103 && g->fractal != 3)
+		ft_init_glynn(g);
 	return (0);
 }

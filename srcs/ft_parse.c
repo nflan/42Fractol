@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:07 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/04 15:41:16 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/05 12:38:57 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,9 @@ int	ft_parse(int ac, char **av, int i)
 		i += ft_putstr_fd("La fonction s'execute comme suit :\
 				\nav[1] = nom de la fractale\nav[2] = width (150 <= int <= 2560)\
 				\nav[3] = height (150 <= int <= 1355)\
-				\nav[4] = color (0 <= int <= 255) (vous pouvez executer\
-la commande \"./fractor color\" pour plus d'informations).\
+				\nav[2] et av[3] : Pour le min et max, tu peux ecrire min ou max\
+				\nav[4] = color (0 <= int <= 255) (tu peux executer la\
+ commande \"./fractor color\" pour plus d'informations).\
 				\nav[5] = ensemble de Julia (0 par defaut)\n", 2);
 		exit (1);
 	}

@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 10:52:06 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/04 17:01:59 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/05 12:43:54 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ typedef struct s_all
 	double			zoom;
 	double			posx;
 	double			posy;
-	int				pal[12];
+	int				pal[13];
 	int				julia;
 	int				width;
 	int				height;

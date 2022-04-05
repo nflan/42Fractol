@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:23:25 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/04 17:40:33 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/05 12:11:36 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ int	ft_zoom(int key, t_all *g)
 			g->zoom *= 1.1;
 		else if (key == 5)
 			g->zoom /= 1.1;
-		printf("g->zoom = %f\n", g->zoom);
 	}
 	else
 	{
@@ -52,7 +51,7 @@ int	ft_zoom(int key, t_all *g)
 		else if (g->fractal == 2)
 			ft_init_julia(g, g->julia);
 		else if (g->fractal == 3)
-			ft_init_dragon(g);
+			ft_init_glynn(g);
 	}
 	return (0);
 }

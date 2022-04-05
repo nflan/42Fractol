@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:20:06 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/04 17:39:35 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/05 12:49:50 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	ft_init_window(t_all *g)
 		ft_putstr_fd("Window error\n", 2);
 		ft_destroy_win(g, 1);
 	}
+	g->julia = 0;
 }
 
 t_all	*ft_init_all(char **av)
@@ -68,7 +69,6 @@ t_all	*ft_init_all(char **av)
 	if (!g->setup || !g->window)
 		ft_free_all(g, 1);
 	g->av = av;
-	g->julia = 0;
 	if (av[5])
 		g->julia = ft_atoi(av[5]);
 	ft_init_color(g);
@@ -76,8 +76,8 @@ t_all	*ft_init_all(char **av)
 		ft_init_julia(g, g->julia);
 	else if (!ft_strncmp(g->av[1], "mandelbrot", 11))
 		ft_init_mandelbrot(g);
-	else if (!ft_strncmp(g->av[1], "dragon", 7))
-		ft_init_dragon(g);
+	else if (!ft_strncmp(g->av[1], "glynn", 6))
+		ft_init_glynn(g);
 	return (g);
 }
 
@@ -89,7 +89,7 @@ int	ft_print_new(t_all *g)
 	else if (g->fractal == 2)
 		ft_julia(g, g->curr);
 	else if (g->fractal == 3)
-		ft_dragon(g, g->curr);
+		ft_glynn(g, g->curr);
 	mlx_destroy_image(g->setup, g->img.img);
 	mlx_clear_window(g->setup, g->window);
 	g->img = g->curr;

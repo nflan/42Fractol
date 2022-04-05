@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 15:31:25 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/04 17:31:01 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/05 12:47:03 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	ft_man_color(void)
 	ft_printf("Turquoise\t= 23\n");
 	ft_printf("Rainbow\t\t= 50\n");
 	ft_printf("Rainbow psyche\t= 51\n");
+	ft_printf("Fond jaune\t= 120\n");
 	ft_printf("Un peu de tout\t= 123\n");
 	ft_printf("Rouge psyche\t= 151\n");
 	ft_printf("Blanc\t\t= 255\n");
@@ -45,13 +46,14 @@ void	ft_init_color(t_all *g)
 	g->pal[6] = 23;
 	g->pal[7] = 50;
 	g->pal[8] = 51;
-	g->pal[9] = 123;
-	g->pal[10] = 151;
-	g->pal[11] = 255;
+	g->pal[9] = 120;
+	g->pal[10] = 123;
+	g->pal[11] = 151;
+	g->pal[12] = 255;
 	if (g->av[4])
 	{
 		g->color = atoi(g->av[4]);
-		while (i >= 0 && i <= 10)
+		while (i >= 0 && i <= 11)
 			if (g->pal[i++] == g->color)
 				i = -1;
 		if (i != -1)
@@ -64,18 +66,18 @@ int	ft_change_color(int key, t_all *g)
 	int	i;
 
 	i = 0;
-	while (g->pal[i] != g->color && i <= 11)
+	while (g->pal[i] != g->color && i <= 12)
 		i++;
 	if (key == 65430)
 	{
 		if (i == 0)
-			g->color = g->pal[11];
+			g->color = g->pal[12];
 		else
 			g->color = g->pal[i - 1];
 	}
 	else if (key == 65432)
 	{
-		if (i == 11)
+		if (i == 12)
 			g->color = g->pal[0];
 		else
 			g->color = g->pal[i + 1];
@@ -104,6 +106,8 @@ int	ft_deg2(int iteration, t_all *g, int i, int color)
 		return (ft_rgb(g, iteration));
 	if (i == 51)
 		return (ft_rgb_psy(g, iteration));
+	if (i == 120)
+		return (create_trgb(100, color, color, iteration * 20));
 	if (i == 151)
 		return (ft_red_psy(g, iteration));
 	return (create_trgb(100, color, color, color));
@@ -133,5 +137,7 @@ int	ft_deg(int iteration, t_all *g, int i)
 			i = 3;
 		}
 	}
+	if (i == 120)
+		color = 200 - iteration * 20;
 	return (ft_deg2(iteration, g, i, color));
 }

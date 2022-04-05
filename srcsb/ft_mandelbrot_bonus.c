@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:22:13 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/04 15:39:07 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/04 18:01:58 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ void	ft_mandelbrot(t_all *g, t_data img)
 			iteration = 0;
 			while (z.re * z.re + z.im * z.im < 4 && iteration < g->max)
 			{
-				z.tmpre = z.re * z.re - z.im * z.im + g->c.re;
-				z.im = z.im * z.re + z.im * z.re + g->c.im;
-				z.re = z.tmpre;
+				z.tmpre = z.re;
+				z.re = z.tmpre * z.tmpre - z.im * z.im + g->c.re;
+				z.im = z.im * z.tmpre + z.im * z.tmpre + g->c.im;
 				iteration++;
 			}
 			if (iteration != g->max)

@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 10:52:06 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/04 17:26:19 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/05 12:08:49 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "../minilibx/mlx.h"
 # include "../libft/libft.h"
+# include <math.h>
 
 typedef struct s_complex
 {
@@ -50,7 +51,7 @@ typedef struct s_all
 	void			*setup;
 	void			*window;
 	double			zoom;
-	int				pal[12];
+	int				pal[13];
 	int				julia;
 	int				width;
 	int				height;
@@ -130,9 +131,9 @@ void	ft_init_mandelbrot(t_all *g);
 void	ft_check_mandelbrot(t_all *g);
 void	ft_mandelbrot(t_all *g, t_data img);
 
-// DRAGON
-void	ft_init_dragon(t_all *g);
-void	ft_check_dragon(t_all *g);
-void	ft_dragon(t_all *g, t_data img);
+// GLYNN
+void	ft_init_glynn(t_all *g);
+void	ft_check_glynn(t_all *g);
+void	ft_glynn(t_all *g, t_data img);
 
 #endif
