@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 15:26:52 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/04 15:37:13 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/05 13:53:49 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ void	my_mlx_pixel_put(t_data *data, t_all *g, int color)
 
 int	ft_destroy_win(t_all *g, int out)
 {
+	if (out == 309)
+		out = 0;
 	if (g->window)
 	{
 		if (g->img.img && g->img.addr)
