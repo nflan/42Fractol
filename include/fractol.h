@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 10:52:06 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/05 15:44:10 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/05 16:00:16 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ t_all	*ft_init_all(char **av);
 // PARSE
 char	**ft_parse_nbr(char **av);
 int		ft_compare(char **av);
-int		ft_error_parse(void);
+int		ft_error_parse(int ac);
 int		ft_parse(int ac, char **av, int i);
 
 // WINDOW

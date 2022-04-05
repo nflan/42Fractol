@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:07 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/05 15:42:53 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/05 16:08:35 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int	ft_compare(char **av)
 	i = 0;
 	if (av[1])
 	{
-		av[1] = ft_strlower(av[1]);
 		if (ft_strncmp(av[1], "julia", 6))
 			i++;
 		if (ft_strncmp(av[1], "mandelbrot", 11))
@@ -44,7 +43,7 @@ int	ft_compare(char **av)
 	return (1);
 }
 
-int	ft_error_parse(void)
+int	ft_error_parse(int ac)
 {
 	ft_putstr_fd("La fonction s'execute comme suit :\
 			\nav[1] = nom de la fractale\nav[2] = width (150 <= int <= 2560)\
@@ -53,13 +52,23 @@ int	ft_error_parse(void)
 			\nav[4] = color (0 <= int <= 255) (tu peux executer la\
  commande \"./fractor color\" pour plus d'informations).\
 			\nav[5] = ensemble de Julia (0 par defaut)\n", 2);
+	if (ac < 4)
+		ft_putstr_fd("\nIl manque un/des argument/s non ?\n", 2);
+	else if (ac > 6)
+		ft_putstr_fd("\nIl y a trop d'arguments non ?\n", 2);
 	exit (1);
 }
 
 int	ft_parse(int ac, char **av, int i)
 {
+	if (av[1])
+		av[1] = ft_strlower(av[1]);
 	if (av[1] && !ft_strncmp(av[1], "color", 6))
+	{
+		if (av[2])
+			ft_printf("Que n'as-tu pas compris dans \"./fractol color\" ?\n\n");
 		ft_man_color();
+	}
 	i += ft_compare(av);
 	if (av[2] || av[3])
 		av = ft_parse_nbr(av);
@@ -70,6 +79,6 @@ int	ft_parse(int ac, char **av, int i)
 	if (ac > 5 && (ft_atoi(av[5]) < 0 || ft_atoi(av[5]) > 9))
 		i += ft_putstr_fd("Les ensembles de Julia traites vont de 0 a 9\n", 2);
 	if (ac < 4 || ac > 6 || i)
-		ft_error_parse();
+		ft_error_parse(ac);
 	return (0);
 }
