@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:07 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/05 12:38:05 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/05 15:22:50 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,18 +44,21 @@ int	ft_compare(char **av)
 
 int	ft_parse(int ac, char **av, int i)
 {
-	if (!ft_strncmp(av[1], "color", 6))
-		return (ft_man_color());
-	if (av[2] || av[3])
-		av = ft_parse_nbr(av);
-	if (!av[2] || ft_atoi(av[2]) < 150 || ft_atoi(av[2]) > 2560)
-		i += ft_putstr_fd("Le 2eme arg doit etre un int >= 150 et <= 2560\n", 2);
-	if (!av[3] || ft_atoi(av[3]) < 150 || ft_atoi(av[3]) > 1355)
-		i += ft_putstr_fd("Le 3eme arg doit etre un int >= 150 et <= 1355\n", 2);
-	av[1] = ft_strlower(av[1]);
-	i += ft_compare(av);
-	if (av[5] && (av[5][0] < 48 || av[5][0] > 57 || av[5][1] != '\0'))
-		i += ft_putstr_fd("Les ensembles de Julia traites vont de 0 a 9\n", 2);
+	if (av[1] && !ft_strncmp(av[1], "color", 6))
+		ft_man_color();
+	if (ac > 3 && ac < 7)
+	{
+		if (av[2] || av[3])
+			av = ft_parse_nbr(av);
+		if (!av[2] || ft_atoi(av[2]) < 150 || ft_atoi(av[2]) > 2560)
+			i += ft_putstr_fd("Le 2eme arg doit etre un int >= 150 et <= 2560\n", 2);
+		if (!av[3] || ft_atoi(av[3]) < 150 || ft_atoi(av[3]) > 1355)
+			i += ft_putstr_fd("Le 3eme arg doit etre un int >= 150 et <= 1355\n", 2);
+		av[1] = ft_strlower(av[1]);
+		i += ft_compare(av);
+		if (av[5] && (av[5][0] < 48 || av[5][0] > 57 || av[5][1] != '\0'))
+			i += ft_putstr_fd("Les ensembles de Julia traites vont de 0 a 9\n", 2);
+	}
 	if (ac < 4 || ac > 6 || i)
 	{
 		i += ft_putstr_fd("La fonction s'execute comme suit :\
