@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 10:52:06 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/05 16:00:16 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/07 10:45:56 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ t_all	*ft_init_all(char **av);
 char	**ft_parse_nbr(char **av);
 int		ft_compare(char **av);
 int		ft_error_parse(int ac);
+int		ft_is_number(int ac, char **av, int error);
 int		ft_parse(int ac, char **av, int i);
 
 // WINDOW

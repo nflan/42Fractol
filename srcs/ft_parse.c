@@ -6,7 +6,7 @@
 /*   By: nflan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:58:07 by nflan             #+#    #+#             */
-/*   Updated: 2022/04/05 16:08:35 by nflan            ###   ########.fr       */
+/*   Updated: 2022/04/07 10:45:04 by nflan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,24 @@ int	ft_error_parse(int ac)
 	exit (1);
 }
 
+int	ft_is_number(int ac, char **av, int error)
+{
+	while (ac-- > 2)
+	{
+		if (av[ac][0] < 48 || av[ac][0] > 57)
+		{
+			if (av[ac][0] != 45 && av[ac][0] != 43)
+				error++;
+			else if (av[ac][1] < 48 || av[ac][1] > 57)
+				error++;
+		}
+	}
+	if (error > 0)
+		ft_putstr_fd("Les parametres apres le nom de la fractale\
+ ne peuvent etre que des nombres\n", 2);
+	return (error);
+}
+
 int	ft_parse(int ac, char **av, int i)
 {
 	if (av[1])
@@ -76,6 +94,7 @@ int	ft_parse(int ac, char **av, int i)
 		i += ft_putstr_fd("Le 2eme arg doit etre un int >= 150 et <= 2560\n", 2);
 	if (!av[3] || ft_atoi(av[3]) < 150 || ft_atoi(av[3]) > 1355)
 		i += ft_putstr_fd("Le 3eme arg doit etre un int >= 150 et <= 1355\n", 2);
+	i += ft_is_number(ac, av, 0);
 	if (ac > 5 && (ft_atoi(av[5]) < 0 || ft_atoi(av[5]) > 9))
 		i += ft_putstr_fd("Les ensembles de Julia traites vont de 0 a 9\n", 2);
 	if (ac < 4 || ac > 6 || i)
