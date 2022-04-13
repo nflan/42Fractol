@@ -6,7 +6,7 @@
 #    By: nflan <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 10:49:49 by nflan             #+#    #+#              #
-#    Updated: 2022/04/05 12:45:07 by nflan            ###   ########.fr        #
+#    Updated: 2022/04/13 17:24:02 by nflan            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ objets = ${sources:.c=.o}
 sourcesB = srcsb/main_bonus.c srcsb/ft_colors_bonus.c srcsb/ft_colors2_bonus.c \
 		   srcsb/ft_julia_bonus.c srcsb/ft_mandelbrot_bonus.c srcsb/ft_zoom_bonus.c \
 		   srcsb/ft_utils_bonus.c srcsb/ft_window_bonus.c srcsb/ft_tools_bonus.c \
-		   srcsb/ft_parse_bonus.c srcsb/ft_glynn.c
+		   srcsb/ft_parse_bonus.c srcsb/ft_glynn_bonus.c
 
 INCB = include/fractol_bonus.h
 
@@ -37,7 +37,7 @@ MINILIBX = minilibx/libmlx_Linux.a
 
 NAME = fractol
 
-#CC = gcc
+#CC = cc
 
 #RM = rm -f
 
@@ -60,7 +60,7 @@ bonus:	${objetsB} ${INCB} ${HEADER} ${LIBFT} ${MINILIBX}
 -include libft/Makefile
 
 ft_%.o : ft_%.c
-	gcc ${CFLAGS} -c $< -o $@
+	cc ${CFLAGS} -c $< -o $@
 
 $(MINILIBX):
 	$(MAKE) -C minilibx/
@@ -86,4 +86,4 @@ re: fclean all
 
 #.SECONDARY: $(objets)
 
-.PHONY: all clean fclean bonus re 
+.PHONY: all clean fclean bonus re
